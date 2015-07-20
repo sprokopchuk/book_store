@@ -1,5 +1,14 @@
 require 'rails_helper'
 
-RSpec.describe "books/new.html.erb", type: :view do
-  pending "add some examples to (or delete) #{__FILE__}"
+RSpec.describe "books/new", type: :view do
+  before(:each) do
+    assign(:book, Book.new())
+  end
+
+  it "renders new book form" do
+    render
+
+    assert_select "form[action=?][method=?]", books_path, "post" do
+    end
+  end
 end

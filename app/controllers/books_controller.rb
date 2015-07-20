@@ -1,24 +1,19 @@
 class BooksController < ApplicationController
+
+  # GET /books
+  # GET /books.json
   def index
-    @books = Books.all
+    @books = Book.all
   end
 
+  # GET /books/1
+  # GET /books/1.json
   def show
     @book = Book.find(params[:id])
   end
 
-  def new
-  end
-
-  def edit
-  end
-
-  def create
-  end
-
-  def update
-  end
-
-  def destroy
-  end
+  private
+    def categories
+      @categories = Category.all
+    end
 end

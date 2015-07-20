@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe "books/show", type: :view do
+RSpec.describe "authors/show", type: :view do
   before(:each) do
-    @book = assign(:book, Book.create!())
+    @author = assign(:author, Author.create!())
   end
 
   it "renders attributes in <p>" do
