@@ -11,7 +11,7 @@ RSpec.describe Order, type: :model do
   it {expect(subject).to have_many(:order_items)}
   it {expect(subject).to belong_to(:billing_address).with_foreign_key("billing_address_id")}
   it {expect(subject).to belong_to(:shipping_address).with_foreign_key("shipping_address_id")}
-  it {expect(subject).to validate_inclusion_of(:state).in_array(Order::STATES.values)}
+  it {expect(subject).to validate_inclusion_of(:state).in_array(Order::STATES)}
 
   context "before save order" do
     let(:book_ordered) {FactoryGirl.create :book}
@@ -23,12 +23,12 @@ RSpec.describe Order, type: :model do
 
   context ".in_progress" do
     let(:orders_in_progress) {FactoryGirl.create_list(:order, 3)}
-    let(:orders_shipped) {FactoryGirl.create_list(:order_shipped, 3)}
+    let(:orders_delivered) {FactoryGirl.create_list(:order_delivered, 3)}
     it "returns list of orders in state in progress" do
       expect(Order.in_progress).to match_array(orders_in_progress)
     end
     it "doesn't return list of orders in state shipped" do
-      expect(Order.in_progress).not_to match_array(orders_shipped)
+      expect(Order.in_progress).not_to match_array(orders_delivered)
     end
   end
 

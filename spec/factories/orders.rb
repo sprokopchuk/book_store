@@ -5,8 +5,8 @@ FactoryGirl.define do
     customer
     credit_card
 
-    factory :order_shipped do
-      state {"shipped"}
+    factory :order_delivered do
+      state {"delivered"}
     end
 
   end

@@ -1,7 +1,9 @@
 class Order < ActiveRecord::Base
 
   scope :in_progress, -> { where(state: "in progress") }
-  STATES = {in_progress: "in progress", completed: "completed", shipped: "shipped"}
+  #STATES = {in_progress: "in progress", in_queue: "in queue", in_delivery: "in delivery", delivered: "delivered", canceled: "canceled"}
+  STATES = %w{in\ progress in\ queue in\ delivery delivered canceled}
+
   before_save :real_price
   belongs_to :customer
   belongs_to :credit_card
@@ -10,7 +12,7 @@ class Order < ActiveRecord::Base
   belongs_to :shipping_address, class_name: "Address", foreign_key: "shipping_address_id"
   validates :total_price, :completed_date, :state, presence: true
   validates :total_price, numericality: true
-  validates :state, inclusion: {in: STATES.values}
+  validates :state, inclusion: {in: STATES}
 
   def add book, amount = 1
     order_item = OrderItem.find_by(book_id: book.id)
