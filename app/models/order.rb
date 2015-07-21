@@ -1,7 +1,6 @@
 class Order < ActiveRecord::Base
 
   scope :in_progress, -> { where(state: "in progress") }
-  #STATES = {in_progress: "in progress", in_queue: "in queue", in_delivery: "in delivery", delivered: "delivered", canceled: "canceled"}
   STATES = %w{in\ progress in\ queue in\ delivery delivered canceled}
 
   before_save :real_price

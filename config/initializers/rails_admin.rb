@@ -14,6 +14,18 @@ RailsAdmin.config do |config|
   ## == Cancan ==
   config.authorize_with :cancan
 
+  config.model Book do
+    exclude_fields :ratings
+  end
+  config.model Author do
+    object_label_method do
+      :full_name
+    end
+    exclude_fields :books
+  end
+  config.model Category do
+    exclude_fields :books
+  end
   ## == PaperTrail ==
   # config.audit_with :paper_trail, 'User', 'PaperTrail::Version' # PaperTrail >= 3.0.0
 

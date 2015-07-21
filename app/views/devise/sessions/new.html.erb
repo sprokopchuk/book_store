@@ -1,7 +1,7 @@
 <div class="col-md-3 col-md-offset-3">
   <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+    <%= devise_error_messages! %>
     <div class="form-group">
-
       <%= f.label :email %><br />
       <div class="input-group field">
         <%= f.email_field :email, autofocus: true, class: "form-control" %>

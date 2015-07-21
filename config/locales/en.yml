@@ -27,3 +27,5 @@ en:
   enter_password: "Enter a password"
   enter_password_confirmation: "Enter a password for confirmation"
   log_in: "Log in"
+  settings: "Settings"
+  orders: "Orders"

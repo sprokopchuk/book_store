@@ -5,4 +5,5 @@ class Book < ActiveRecord::Base
   validates :title, :price, :books_in_stock, presence: true
   validates :price, :books_in_stock, numericality: true
   mount_uploader :image, ImageBookUploader
+
 end
