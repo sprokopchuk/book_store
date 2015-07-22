@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150720191851) do
+ActiveRecord::Schema.define(version: 20150722164254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,11 +22,15 @@ ActiveRecord::Schema.define(version: 20150720191851) do
     t.string   "city"
     t.string   "phone"
     t.integer  "country_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.integer  "customer_billing_address_id"
+    t.integer  "customer_shipping_address_id"
   end
 
   add_index "addresses", ["country_id"], name: "index_addresses_on_country_id", using: :btree
+  add_index "addresses", ["customer_billing_address_id"], name: "index_addresses_on_customer_billing_address_id", using: :btree
+  add_index "addresses", ["customer_shipping_address_id"], name: "index_addresses_on_customer_shipping_address_id", using: :btree
 
   create_table "authors", force: :cascade do |t|
     t.string   "first_name"
@@ -87,19 +91,14 @@ ActiveRecord::Schema.define(version: 20150720191851) do
   end
 
   create_table "orders", force: :cascade do |t|
-    t.float    "total_price",         default: 0.0
+    t.float    "total_price",    default: 0.0
     t.date     "completed_date"
-    t.string   "state",               default: "in progress"
+    t.string   "state",          default: "in progress"
     t.integer  "credit_card_id"
     t.integer  "customer_id"
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
-    t.integer  "billing_address_id"
-    t.integer  "shipping_address_id"
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
   end
-
-  add_index "orders", ["billing_address_id"], name: "index_orders_on_billing_address_id", using: :btree
-  add_index "orders", ["shipping_address_id"], name: "index_orders_on_shipping_address_id", using: :btree
 
   create_table "ratings", force: :cascade do |t|
     t.text     "review"
