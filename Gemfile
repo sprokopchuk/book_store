@@ -10,8 +10,8 @@ gem 'cancancan'
 gem 'kaminari'
 gem 'carrierwave'
 gem 'mini_magick'
+gem 'omniauth'
 gem 'omniauth-facebook'
-
 gem 'bootstrap-sass', '~> 3.3.5'
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -55,7 +55,10 @@ group :development, :test do
 end
 
 group :test do
+  gem 'connection_pool'
+  gem 'selenium-webdriver'
   gem 'capybara'
+  gem 'launchy'
   gem 'faker'
   gem 'database_cleaner'
   gem 'shoulda-matchers'

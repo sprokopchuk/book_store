@@ -1,0 +1,30 @@
+.col-md-3.col-md-offset-3
+  = form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
+    = devise_error_messages!
+    .form-group
+      = f.label :email
+      %br/
+      .input-group.field
+        = f.email_field :email, autofocus: true, class: "form-control", placeholder: t("settings.enter_email")
+        %span.input-group-addon
+          %span.glyphicon.glyphicon-asterisk
+      = f.label :password
+      - if @validatable
+        %em
+          (#{@minimum_password_length} characters minimum)
+      %br/
+      .input-group.field
+        = f.password_field :password, autocomplete: "off", class: "form-control", placeholder: t("settings.enter_password")
+        %span.input-group-addon
+          %span.glyphicon.glyphicon-asterisk
+      = f.label :password_confirmation
+      %br/
+      .input-group.field
+        = f.password_field :password_confirmation, autocomplete: "off", class: "form-control", placeholder: t("settings.enter_password_confirmation")
+        %span.input-group-addon
+          %span.glyphicon.glyphicon-asterisk
+      %br/
+      .actions
+        = f.submit t("settings.register"), class: "btn btn-primary"
+      = render "devise/shared/links"
+

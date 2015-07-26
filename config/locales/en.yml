@@ -20,12 +20,30 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  sign_in: "Sign in"
-  sign_out: "Sign out"
-  register: "Register"
-  enter_email: "Enter Email"
-  enter_password: "Enter a password"
-  enter_password_confirmation: "Enter a password for confirmation"
-  log_in: "Log in"
-  settings: "Settings"
-  orders: "Orders"
+  settings:
+    enter_email: "Enter Email"
+    enter_password: "Enter a password"
+    enter_password_confirmation: "Enter a password for confirmation"
+    register: "Register"
+    settings: "Settings"
+    orders: "Orders"
+    edit_info:
+      first_name: "First name"
+      last_name: "Last name"
+      street_address: "Street address"
+      city: "City"
+      country: "Country"
+      zip_code: "Zip code"
+      phone: "Phone"
+      current_password: "Current password"
+      new_password: "New password"
+      update_info: "Update information"
+      destroy_account: "Remove account"
+      button_destroy_account: "Please remove my account"
+      confirmation__destroy_account: "Do you undestand that your all data will be lost?"
+  sessions:
+    log_in: "Log in"
+    log_out: "Log out"
+  password:
+    fogot_password: "Forgot your password?"
+

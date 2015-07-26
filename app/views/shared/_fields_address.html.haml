@@ -1,0 +1,14 @@
+= address_form.text_field :first_name, class: "form-control", placeholder: t("settings.edit_info.first_name")
+%br/
+= address_form.text_field :last_name, class: "form-control", placeholder: t("settings.edit_info.last_name")
+%br/
+= address_form.text_field :address, class: "form-control", placeholder:  t("settings.edit_info.street_address")
+%br/
+= address_form.text_field :city, class: "form-control", placeholder:  t("settings.edit_info.city")
+%br/
+= address_form.select :country_id, Country.all.collect {|c| [ c.name, c.id ] }, { prompt:  t("settings.edit_info.country")}, {class: "form-control" }
+%br/
+= address_form.text_field :zipcode, class: "form-control", placeholder:  t("settings.edit_info.zip_code")
+%br/
+= address_form.text_field :phone, class: "form-control", placeholder:  t("settings.edit_info.phone")
+%br/

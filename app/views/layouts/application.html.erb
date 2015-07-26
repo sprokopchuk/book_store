@@ -19,12 +19,12 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <% if user_signed_in? %>
-            <li><%= link_to t(:settings), edit_user_registration_path(current_user) %></li>
+            <li><%= link_to t("settings.settings"), edit_user_registration_path(current_user) %></li>
             <li><%= link_to t(:orders), '#' %></li>
-            <li><%= link_to t(:sign_out), sign_out_path %></li>
+            <li><%= link_to t("sessions.log_out"), destroy_user_session_path, :method => :delete  %></li>
           <% else %>
-            <li><%= link_to t(:sign_in), sign_in_path %></li>
-            <li><%= link_to t(:register), register_path %></li>
+            <li><%= link_to t("sessions.log_in"), new_user_session_path %></li>
+            <li><%= link_to t("settings.register"), new_user_registration_path %></li>
           <% end %>
         </ul>
       </div>

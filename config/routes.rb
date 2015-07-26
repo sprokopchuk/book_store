@@ -1,12 +1,6 @@
 Rails.application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
-  devise_for :users
+  devise_for :users,  path: '', path_names: { sign_in: 'login', sign_out: 'logout', password: 'password', registration: 'settings', sign_up: 'register' }, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   root 'books#index'
-  get '/books/:id', to: "books#show", as: 'book'
-  devise_scope :user do
-    get "sign_in", to: "devise/sessions#new"
-    get "sign_out", to: "devise/sessions#destroy"
-    get "register", to: "devise/registrations#new"
-  end
-end
+  get '/books/:id', to: "books#show", as: 'book'end
