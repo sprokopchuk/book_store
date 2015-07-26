@@ -8,7 +8,6 @@ feature 'User management' do
   given!(:customer) {FactoryGirl.create(:customer)}
   given!(:billing_address) {FactoryGirl.create :address}
   given!(:shipping_address) {FactoryGirl.create :address}
-
   feature 'register a new user' do
 
     scenario {expect(page).to have_link(I18n.t("settings.register"), href: new_user_registration_path)}
@@ -312,4 +311,30 @@ feature 'User management' do
       expect(page).to have_content(I18n.t("devise.registrations.destroyed"))
     end
   end
+
+  feature 'log in via Facebook' do
+    given!(:customer_with_facebook_account) {FactoryGirl.create :customer, uid: 1234567, provider: "facebook"}
+    background do
+      visit root_path
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new({
+          provider: 'facebook',
+          uid: customer_with_facebook_account.uid,
+          info: {
+            email: customer_with_facebook_account.email
+          },
+          credentials: {
+            token: "123456",
+            expires_at: Time.now + 1.week
+          }
+      })
+    end
+    scenario 'login via facebook', js: true do
+      click_link I18n.t("sessions.log_in")
+      click_link '', href: user_omniauth_authorize_path(:facebook)
+      expect(page).to have_content(I18n.t("devise.omniauth_callbacks.success", kind: "Facebook"))
+    end
+  end
 end
+
+
