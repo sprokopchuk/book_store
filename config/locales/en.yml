@@ -46,4 +46,6 @@ en:
     log_out: "Log out"
   password:
     fogot_password: "Forgot your password?"
+  header:
+    shop: "SHOP"
 

@@ -1,8 +1,11 @@
-
-<h1>Listing Books</h1>
-
-
-
-<br>
-
-
+<h1> Listing Books</h1>
+<% @books.each do |book| %>
+  <div class="col-md-4">
+    <%= image_tag(book.image.thumb.url) %>
+    <h5><%= link_to book.title, book_path(book) %></h5>
+    <b>$<%= book.price %></b>
+  </div>
+<% end %>
+<div class="col-lg-6 col-lg-offset-3 text-center">
+  <%= paginate @books, :window => 2 %>
+</div>

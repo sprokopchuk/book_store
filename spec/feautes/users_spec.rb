@@ -335,6 +335,7 @@ feature 'User management' do
       expect(page).to have_content(I18n.t("devise.omniauth_callbacks.success", kind: "Facebook"))
     end
   end
-end
+
+ end
 
 
