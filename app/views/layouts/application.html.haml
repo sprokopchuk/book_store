@@ -16,6 +16,11 @@
               %a{:href => "#"} HOME
             %li= link_to t("header.shop"), root_path
           %ul.nav.navbar-nav.navbar-right
+            %li
+              = link_to order_path(current_or_guest_user.current_order_in_progress) do
+                %span.glyphicon.glyphicon-shopping-cart
+                = t("header.cart")
+                ($#{current_or_guest_user.current_order_in_progress.real_price})
             - if user_signed_in?
               %li= link_to t("settings.admin_panel"), rails_admin_path if current_user.admin?
               %li= link_to t("settings.settings"), edit_user_registration_path(current_user)

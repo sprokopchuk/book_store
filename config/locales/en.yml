@@ -49,8 +49,9 @@ en:
     fogot_password: "Forgot your password?"
   header:
     shop: "SHOP"
+    cart: "CART"
   books:
-    add_to_card: "Add to card"
+    add_to_card: "Add to cart"
     out_in_stock: "Out in stock"
     add_rating: "Add review"
     rating: "Rating [1-10]"

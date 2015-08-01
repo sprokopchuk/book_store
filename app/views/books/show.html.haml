@@ -1,0 +1,31 @@
+.col-sm-8.col-md-9
+  %h1= @book.title
+  = image_tag @book.image.thumb.url, class: "img-thumbnail img-responsive pull-left", size: "200x300"
+  .col-sm-7.col-md-8
+    %span.lead.text-danger.pull-left{:style => "font-size: 24px"}
+      %strong
+        $#{@book.price}
+    .pull-right
+      - if @book.in_stock?
+        = form_for @order_item, html: {class: "form-inline" } do |f|
+          = f.number_field :quantity, {value: 1, min: 1, max: @book.in_stock, class: "form-control"}
+          = f.hidden_field :book_id, :value => @book.id
+          = f.hidden_field :price, :value => @book.price
+          = f.submit t("books.add_to_card"), class: "btn btn-primary"
+      - else
+        %span.book.alert-danger= t("books.out_in_stock")
+      %br/
+      = button_to t("books.add_to_wishlist"), "#", class: "btn btn-default btn-xs pull-right margin-bottom"
+  %p.col-sm-7.col-md-8= @book.description
+  .clearfix
+  - if user_signed_in?
+    .col-sm-9.col-md-10.col-lg-offset-1
+      = form_for @book.ratings.build do |f|
+        = f.hidden_field :user_id, :value => current_user.id
+        = f.label :rate, t("books.rating")
+        = f.number_field :rate, {value: 1, min: 1, max: 10, class: "form-control"}
+        = f.label :review, t("books.text_review")
+        = f.text_area :review, class: "form-control"
+        %br/
+        = f.submit t("books.add_rating"), class: "btn btn-primary"
+= render partial: 'shared/categories', locals: {categories: @categories}

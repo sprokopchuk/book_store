@@ -10,16 +10,6 @@ class OrdersController < ApplicationController
   end
 
 
-  def new
-    @order = Order.new
-  end
-
-  # GET /orders/1/edit
-  def edit
-  end
-
-  # POST /orders
-  # POST /orders.json
   def create
     @order = Order.new(order_params)
 
@@ -50,16 +40,9 @@ class OrdersController < ApplicationController
     end
   end
 
-  def add_book
-    #Order.add
-  end
-
   private
     def set_order
       @order = Order.find(params[:id])
     end
 
-    def order_params
-      params[:order]
-    end
 end

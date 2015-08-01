@@ -14,7 +14,7 @@ class Order < ActiveRecord::Base
   validates :state, inclusion: {in: STATES}
 
 
-  def add book, amount = 1
+  def add_d book, amount = 1
     order_item = OrderItem.find_by(book_id: book.id)
     if order_item.nil?
       self.order_items << OrderItem.new(price: book.price, book_id: book.id, quantity: amount)
@@ -22,6 +22,17 @@ class Order < ActiveRecord::Base
       amount_ordered = order_item.quantity
       amount_ordered += amount
       order_item.update_attributes(quantity: amount_ordered)
+    end
+  end
+
+  def add order_item
+    item = OrderItem.find_by(book_id: order_item.book_id)
+    if item.nil?
+      self.order_items << order_item
+    else
+      amount_ordered = item.quantity
+      amount_ordered += order_item.quantity
+      item.update_attributes(quantity: amount_ordered)
     end
   end
 

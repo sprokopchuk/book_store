@@ -26,6 +26,6 @@ class BooksController < ApplicationController
     end
 
     def new_order_item
-      @order_item = current_or_guest_user.current_order_in_progress.order_items.build
+      @order_item = OrderItem.new
     end
 end
