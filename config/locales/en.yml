@@ -26,6 +26,7 @@ en:
     enter_password_confirmation: "Enter a password for confirmation"
     register: "Register"
     settings: "Settings"
+    admin_panel: "Admin panel"
     orders: "Orders"
     edit_info:
       first_name: "First name"
@@ -48,4 +49,11 @@ en:
     fogot_password: "Forgot your password?"
   header:
     shop: "SHOP"
+  books:
+    add_to_card: "Add to card"
+    out_in_stock: "Out in stock"
+    add_rating: "Add review"
+    rating: "Rating [1-10]"
+    text_review: "Text Review"
+    add_to_wishlist: "Add to wishes"
 

@@ -1,13 +1,20 @@
 class User < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable, :omniauth_providers => [:facebook]
 
-  after_initialize :check_type
-  def check_type
-    self.type = "Customer" if self.type.nil?
+  has_many :orders
+  has_many :ratings
+  has_one :credit_card
+  has_one :billing_address, class_name: "Address", foreign_key: "billing_address_id"
+  has_one :shipping_address, class_name: "Address", foreign_key: "shipping_address_id"
+  accepts_nested_attributes_for :billing_address, :reject_if => :all_blank
+  accepts_nested_attributes_for :shipping_address, :reject_if => :all_blank
+
+  def current_order_in_progress
+    current_order = self.orders.in_progress.take
+    current_order.nil? ? self.orders.create : current_order
   end
 
   def self.from_omniauth(auth)

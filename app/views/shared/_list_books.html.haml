@@ -1,0 +1,8 @@
+- @books.each do |book|
+  .book.col-md-4.text-center
+    .thumbnail
+      = link_to book_path(book) do
+        = image_tag(book.image.thumb.url)
+      %h5= link_to book.title, book_path(book)
+      %b
+        $#{book.price}

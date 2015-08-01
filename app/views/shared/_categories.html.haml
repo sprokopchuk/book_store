@@ -1,0 +1,7 @@
+.col-sm-1.col-md-2
+  .text-center
+    %h3
+      %b Categories
+  .list-group
+    - @categories.each do |cat|
+      = link_to cat.title, category_books_path(cat), class: "list-group-item"

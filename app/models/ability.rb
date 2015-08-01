@@ -3,13 +3,14 @@ class Ability
 
   def initialize(user)
     user ||= User.new
-    if user.instance_of? Admin
+    if user.admin?
       can :access, :rails_admin
       can :dashboard
       can :manage, [Book, Author, Category]
       can [:update, :read], Order
-    elsif user.instance_of? Customer
-      can :manage, Order, :customer_id => user.id
+      can :read, User
+    else
+      can :manage, Order, :user_id => user.id
     end
   end
 end

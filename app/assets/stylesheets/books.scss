@@ -1,3 +1,18 @@
 // Place all the styles related to the Books controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.book {
+  @extend .btn;
+  cursor: default;
+}
+.thumbnail a> img{
+  width: 200px;
+  height: 250px;
+}
+.img-thumbnail {
+  margin-right: 20px;
+  margin-bottom: 30px;
+}
+.margin-bottom{
+  margin-bottom: 10px;
+}
