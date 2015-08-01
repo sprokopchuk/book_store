@@ -7,8 +7,9 @@ class Ability
       can :access, :rails_admin
       can :dashboard
       can :manage, [Book, Author, Category]
-      can [:update, :read], Order
-      can :read, User
+      can :manage, Order
+      can :manage, OrderItem
+      can :manage, User
     else
       can :manage, Order, :user_id => user.id
     end

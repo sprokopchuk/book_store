@@ -30,7 +30,17 @@ class ApplicationController < ActionController::Base
     # called (once) when the user logs in, insert any code your application needs
     # to hand off from guest_user to current_user.
     def logging_in
-      User.find_by(email: guest_user.email).destroy
+      guest_order = guest_user.current_order_in_progress
+      current_order =  current_user.current_order_in_progress
+      if current_order.order_items.empty?
+        guest_order.order_items.each do |order_item|
+          order_item.order_id = current_order.id
+          order_item.save!
+        end
+      else
+        current_order.merge guest_order
+      end
+      #guest_user.destroy
           # For example:
       # guest_comments = guest_user.comments.all
       # guest_comments.each do |comment|

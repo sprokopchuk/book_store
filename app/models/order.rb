@@ -13,20 +13,8 @@ class Order < ActiveRecord::Base
   validates :total_price, numericality: true
   validates :state, inclusion: {in: STATES}
 
-
-  def add_d book, amount = 1
-    order_item = OrderItem.find_by(book_id: book.id)
-    if order_item.nil?
-      self.order_items << OrderItem.new(price: book.price, book_id: book.id, quantity: amount)
-    else
-      amount_ordered = order_item.quantity
-      amount_ordered += amount
-      order_item.update_attributes(quantity: amount_ordered)
-    end
-  end
-
   def add order_item
-    item = OrderItem.find_by(book_id: order_item.book_id)
+    item = OrderItem.find_by(book_id: order_item.book_id, order_id: self.id)
     if item.nil?
       self.order_items << order_item
     else
@@ -39,6 +27,21 @@ class Order < ActiveRecord::Base
   def real_price
     self.order_items.find_each {|item| self.total_price += item.price * item.quantity }
     self.total_price
+  end
+
+  def merge other_order
+    current_order_items = self.order_items
+    other_order.order_items.each do |order_item|
+      if current_order_items.include? order_item
+        current_order_item = OrderItem.find_by(book_id: order_item.book_id, order_id: self.id)
+        amount_ordered = current_order_item.quantity
+        amount_ordered += order_item.quantity
+        current_order_item.update_attributes(quantity: amount_ordered)
+     else
+        order_item.order_id = self.id
+        order_item.save
+      end
+    end
   end
 
 end
