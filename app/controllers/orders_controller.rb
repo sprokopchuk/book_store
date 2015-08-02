@@ -13,7 +13,7 @@ class OrdersController < ApplicationController
 
   def update
     if @order.update(order_params)
-      redirect_to @order, notice: 'Order was successfully updated.'
+      redirect_to :back, notice: 'Cart was successfully updated.'
     else
       render :edit
     end
@@ -30,7 +30,7 @@ class OrdersController < ApplicationController
     end
 
     def order_params
-      params.require(:order).permit(order_items: [:quantity, :_destroy])
+      params.require(:order).permit(order_items_attributes: [:id, :quantity])
     end
 
 end

@@ -14,6 +14,6 @@
     %strong
       $#{order_item.total_price}
   %td.col-sm-1.col-md-1
-    = button_to order_item_path(order_item), class: "btn btn-danger" do
+    = link_to order_item_path(order_item), method: :delete,  class: "btn btn-danger" do
       %span.glyphicon.glyphicon-remove
       Remove

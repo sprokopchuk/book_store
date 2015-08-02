@@ -23,7 +23,7 @@
           </thead>
           <tbody>
             <% @order.order_items.each do |order_item| %>
-              <%= f.fields_for "order_items[]", order_item do |item_form| %>
+              <%= f.fields_for :order_items, order_item do |item_form| %>
                 <%= render partial: 'shared/order_item_form', locals: {item_form: item_form, order_item: order_item} %>
               <% end %>
             <% end %>
