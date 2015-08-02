@@ -1,0 +1,68 @@
+<div class="col-sm-12 col-md-10 col-md-offset-1">
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      <div class="panel-title">
+        <div class="row">
+          <div class="col-xs-6">
+            <h5><span class="glyphicon glyphicon-shopping-cart"></span>Shopping Cart</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <%= form_for(@order) do |f| %>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Book</th>
+              <th>Quantity</th>
+              <th class="text-center">Price</th>
+              <th class="text-center">Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @order.order_items.each do |order_item| %>
+              <%= f.fields_for "order_items[]", order_item do |item_form| %>
+                <%= render partial: 'shared/order_item_form', locals: {item_form: item_form, order_item: order_item} %>
+              <% end %>
+            <% end %>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><h3>Subtotal</h3></td>
+              <td><h3><strong>$<%= @order.real_price %></strong></h3></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><b>Coupon code</b></td>
+              <td><%= f.submit "Update", class: "btn btn-primary" %></td>
+            </tr>
+          </tbody>
+        </table>
+      <% end %>
+    </div>
+    <div class="panel-footer">
+        <div class="row text-center">
+          <div class="col-xs-2">
+            <button type="button" class="btn btn-danger btn-block">
+              Empty cart
+            </button>
+          </div>
+          <div class="col-xs-2">
+            <button type="button" class="btn btn-default btn-block">
+              Continue shopping
+            </button>
+          </div>
+          <div class="col-xs-2">
+            <button type="button" class="btn btn-success btn-block">
+              Checkout
+            </button>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

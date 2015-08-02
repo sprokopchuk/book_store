@@ -3,7 +3,6 @@ class Order < ActiveRecord::Base
   scope :in_progress, -> { where(state: "in progress") }
   STATES = %w{in\ progress in\ queue in\ delivery delivered canceled}
 
-  before_save :real_price
   belongs_to :user
   belongs_to :credit_card
   has_many :order_items
@@ -12,6 +11,7 @@ class Order < ActiveRecord::Base
   validates :total_price, :state, presence: true
   validates :total_price, numericality: true
   validates :state, inclusion: {in: STATES}
+  accepts_nested_attributes_for :order_items, allow_destroy: true, :reject_if => :all_blank
 
   def add order_item
     item = OrderItem.find_by(book_id: order_item.book_id, order_id: self.id)

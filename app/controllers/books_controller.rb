@@ -2,6 +2,7 @@ class BooksController < ApplicationController
 
   before_action :categories, only: [:show, :index, :by_category]
   before_action :new_order_item, only: :show
+  before_action :new_rating, only: :show
 
   def index
     @books = Book.all.page(params[:page])
@@ -27,5 +28,9 @@ class BooksController < ApplicationController
 
     def new_order_item
       @order_item = OrderItem.new
+    end
+
+    def new_rating
+      @rating = Rating.new
     end
 end

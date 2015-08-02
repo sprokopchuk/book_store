@@ -26,12 +26,19 @@
             Currently waiting confirmation for: #{resource.unconfirmed_email}
       .col-md-4.col-md-offset-2
         %u
+          %h3 Full name
+        = f.text_field :first_name, class: "form-control", placeholder:  t("settings.edit_info.first_name")
+        %br/
+        = f.text_field :last_name, class: "form-control", placeholder:  t("settings.edit_info.last_name")
+        %br/
+      .col-md-4
+        %u
           %h3 Password
         = f.password_field :current_password, autocomplete: "off", class: "form-control", placeholder:  t("settings.edit_info.current_password")
         %br/
         = f.password_field :password, autocomplete: "off", class: "form-control", placeholder:  t("settings.edit_info.new_password")
         %br/
-      .col-md-4.col-md-offset-4.actions
+      .col-md-8.col-md-offset-4.actions
         = f.submit  t("settings.edit_info.update_info"), class: "btn btn-primary"
   .col-md-5
     %u

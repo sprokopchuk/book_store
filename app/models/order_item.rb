@@ -7,4 +7,8 @@ class OrderItem < ActiveRecord::Base
   def ==(other_order_item)
     self.book_id == other_order_item.book_id
   end
+
+  def total_price
+    self.price * self.quantity
+  end
 end

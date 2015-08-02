@@ -1,0 +1,21 @@
+<% @book.ratings.each do |rating| %>
+<h2 class="page-header">Reviews</h2>
+<section class="review-list">
+  <article class="row">
+    <div class="panel panel-default arrow left">
+      <div class="panel-body">
+        <header class="text-left">
+          <div class="review-user"><i class="fa fa-user"></i> <%= rating.user.full_name %></div>
+          <time class="review-date"><i class="fa fa-clock-o"></i> <%= rating.created_at.strftime("%b %d, %Y") %></time>
+        </header>
+        <div class="review-text">
+          <p>
+            <%= rating.review %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </article>
+</section>
+<% end %>
+

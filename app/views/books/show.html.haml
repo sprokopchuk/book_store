@@ -20,12 +20,14 @@
   .clearfix
   - if user_signed_in?
     .col-sm-9.col-md-10.col-lg-offset-1
-      = form_for @book.ratings.build do |f|
-        = f.hidden_field :user_id, :value => current_user.id
+      = form_for @rating do |f|
+        = f.hidden_field :book_id, :value => @book.id
         = f.label :rate, t("books.rating")
         = f.number_field :rate, {value: 1, min: 1, max: 10, class: "form-control"}
         = f.label :review, t("books.text_review")
         = f.text_area :review, class: "form-control"
         %br/
         = f.submit t("books.add_rating"), class: "btn btn-primary"
+      %br/
+      = render partial: 'reviews', locals: {book: @book}
 = render partial: 'shared/categories', locals: {categories: @categories}

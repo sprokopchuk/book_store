@@ -10,6 +10,7 @@ class Ability
       can :manage, Order
       can :manage, OrderItem
       can :manage, User
+      can :manage, Rating
     else
       can :manage, Order, :user_id => user.id
     end

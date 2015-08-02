@@ -8,6 +8,9 @@ class OrdersController < ApplicationController
   def show
   end
 
+  def edit
+  end
+
   def update
     if @order.update(order_params)
       redirect_to @order, notice: 'Order was successfully updated.'
@@ -24,6 +27,10 @@ class OrdersController < ApplicationController
   private
     def set_order
       @order = Order.find(params[:id])
+    end
+
+    def order_params
+      params.require(:order).permit(order_items: [:quantity, :_destroy])
     end
 
 end

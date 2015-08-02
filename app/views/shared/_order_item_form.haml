@@ -1,0 +1,19 @@
+%tr
+  %td.col-sm-8.col-md-6
+    .media
+      = image_tag order_item.book.image.thumb.url, class: "media-object thumbnail pull-left", size: "90x120"
+      .media-body
+        %h4.media-heading= link_to order_item.book.title, book_path(order_item.book)
+        %p= order_item.book.description.truncate(200, separator: ' ')
+  %td.col-sm-1.col-md-1{:style => "text-align: center"}
+    = item_form.number_field :quantity, {min: 1, max: order_item.book.in_stock, class: "form-control"}
+  %td.col-sm-1.col-md-1.text-center
+    %strong
+      $#{order_item.book.price}
+  %td.col-sm-1.col-md-1.text-center
+    %strong
+      $#{order_item.total_price}
+  %td.col-sm-1.col-md-1
+    = button_to order_item_path(order_item), class: "btn btn-danger" do
+      %span.glyphicon.glyphicon-remove
+      Remove

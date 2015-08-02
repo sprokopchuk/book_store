@@ -24,8 +24,6 @@ ActiveRecord::Schema.define(version: 20150729191431) do
     t.integer  "country_id"
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
-    t.string   "first_name"
-    t.string   "last_name"
     t.integer  "billing_address_id"
     t.integer  "shipping_address_id"
   end
@@ -129,6 +127,8 @@ ActiveRecord::Schema.define(version: 20150729191431) do
     t.string   "uid"
     t.boolean  "admin",                  default: false
     t.boolean  "guest",                  default: false
+    t.string   "last_name"
+    t.string   "first_name"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

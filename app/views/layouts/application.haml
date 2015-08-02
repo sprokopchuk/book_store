@@ -17,7 +17,7 @@
             %li= link_to t("header.shop"), root_path
           %ul.nav.navbar-nav.navbar-right
             %li
-              = link_to order_path(current_or_guest_user.current_order_in_progress) do
+              = link_to edit_order_path(current_or_guest_user.current_order_in_progress) do
                 %span.glyphicon.glyphicon-shopping-cart
                 = t("header.cart")
                 ($#{current_or_guest_user.current_order_in_progress.real_price})

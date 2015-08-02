@@ -1,5 +1,5 @@
 .col-sm-8.col-md-9
   %h1= @current_category.title
-  = render partial: "shared/list_books", locals: {books: @books}
+  = render partial: "list_books", locals: {books: @books}
   = paginate @books
 = render partial: 'shared/categories', locals: {categories: @categories, current_category: @current_category}
