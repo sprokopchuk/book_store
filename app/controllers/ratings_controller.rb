@@ -1,6 +1,7 @@
 class RatingsController < ApplicationController
 
   before_action :current_book, only: :create
+  authorize_resource
 
   def create
     @rating = current_user.ratings.build(rating_params)

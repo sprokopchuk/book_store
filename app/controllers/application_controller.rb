@@ -20,7 +20,6 @@ class ApplicationController < ActionController::Base
 
   def guest_user(with_retry = true)
     @cached_guest_user ||= User.find(session[:guest_user_id] ||= create_guest_user.id)
-
   rescue ActiveRecord::RecordNotFound # if session[:guest_user_id] invalid
      session[:guest_user_id] = nil
      guest_user if with_retry
@@ -40,13 +39,6 @@ class ApplicationController < ActionController::Base
       else
         current_order.merge guest_order
       end
-      #guest_user.destroy
-          # For example:
-      # guest_comments = guest_user.comments.all
-      # guest_comments.each do |comment|
-        # comment.user_id = current_user.id
-        # comment.save!
-      # end
       # Add items in guest's shopping card into user's shopping card
     end
 
@@ -55,12 +47,21 @@ class ApplicationController < ActionController::Base
       u.save!(:validate => false)
       session[:guest_user_id] = u.id
       u
-  end
+    end
+
+    def current_ability
+      @current_ability ||= Ability.new(current_or_guest_user)
+    end
+
+    rescue_from CanCan::AccessDenied do |exception|
+      redirect_to main_app.root_url, :alert => exception.message
+    end
 
   protected
     def configure_permitted_parameters
+      devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:first_name, :last_name, :email, :password, :password_confirmation) }
       devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:current_password, :password, :email,
-                                  :billing_address_attributes => [:first_name, :last_name, :address, :city, :country_id, :zipcode, :phone],
-                                  :shipping_address_attributes => [:first_name, :last_name, :address, :city, :country_id, :zipcode, :phone]) }
+                                  :billing_address_attributes => [:address, :city, :country_id, :zipcode, :phone],
+                                  :shipping_address_attributes => [:address, :city, :country_id, :zipcode, :phone]) }
     end
 end

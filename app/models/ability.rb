@@ -11,7 +11,12 @@ class Ability
       can :manage, OrderItem
       can :manage, User
       can :manage, Rating
+    elsif user.guest?
+      can :manage, OrderItem, :user_id => user.id
+      can :manage, Order, :user_id => user.id
     else
+      can [:read, :create], Rating
+      can :manage, OrderItem, :user_id => user.id
       can :manage, Order, :user_id => user.id
     end
   end

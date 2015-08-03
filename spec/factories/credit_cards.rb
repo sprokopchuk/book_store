@@ -6,6 +6,6 @@ FactoryGirl.define do
     exp_year {Faker::Business.credit_card_expiry_date.year}
     first_name {Faker::Name.name.split(" ")[0]}
     last_name {Faker::Name.name.split(" ")[1]}
-    customer
+    user
   end
 end

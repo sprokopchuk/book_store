@@ -1,0 +1,51 @@
+.col-sm-12.col-md-10.col-md-offset-1
+  .panel.panel-info
+    .panel-heading
+      .panel-title
+        .row
+          .col-xs-6
+            %h5
+              %span.glyphicon.glyphicon-shopping-cart>
+              Shopping Cart
+    .panel-body
+      = form_for(@order) do |f|
+        %table.table.table-hover
+          %thead
+            %tr
+              %th Book
+              %th Quantity
+              %th.text-center Price
+              %th.text-center Total
+              %th
+          %tbody
+            - @order.order_items.each do |order_item|
+              = f.fields_for :order_items, order_item do |item_form|
+                = render partial: 'shared/order_item_form', locals: {item_form: item_form, order_item: order_item}
+            %tr
+              %td
+              %td
+              %td
+              %td
+                %h3 Subtotal
+              %td
+                %h3
+                  %strong
+                    $#{@order.real_price}
+            %tr
+              %td
+              %td
+              %td
+              %td
+                %b Coupon code
+              %td= f.submit "Update", class: "btn btn-primary"
+    .panel-footer
+      .row.text-center
+        .col-xs-2
+          %button.btn.btn-danger.btn-block{:type => "button"}
+            Empty cart
+        .col-xs-2
+          %button.btn.btn-default.btn-block{:type => "button"}
+            Continue shopping
+        .col-xs-2
+          %button.btn.btn-success.btn-block{:type => "button"}
+            Checkout

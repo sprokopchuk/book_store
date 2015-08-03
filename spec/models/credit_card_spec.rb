@@ -12,5 +12,5 @@ RSpec.describe CreditCard, type: :model do
   it {expect(subject).to validate_numericality_of(:cvv)}
   it {expect(subject).to validate_length_of(:number)}
   it {expect(subject).to have_many(:orders)}
-  it {expect(subject).to belong_to(:customer)}
+  it {expect(subject).to belong_to(:user)}
 end

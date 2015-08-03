@@ -1,5 +1,6 @@
 class OrdersController < ApplicationController
-  before_action :set_order, only: [:show, :edit, :update, :destroy]
+  before_action :set_order, only: [:show, :edit, :update]
+  load_and_authorize_resource
 
   def index
     @orders = Order.all
@@ -15,13 +16,8 @@ class OrdersController < ApplicationController
     if @order.update(order_params)
       redirect_to :back, notice: 'Cart was successfully updated.'
     else
-      render :edit
+      redirect_to :back, notice: 'Something is went wrong.'
     end
-  end
-
-  def destroy
-    @order.destroy
-    redirect_to orders_url, notice: 'Order was successfully destroyed.'
   end
 
   private

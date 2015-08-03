@@ -1,3 +1,4 @@
-<% if user_signed_in? %>
+<% if @order.state == "in progress" %>
   <%= render partial: "shopping_cart", locals: {order: @order} %>
 <% end %>
+
