@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   resources :ratings, only: :create
 
   get '/shopping_cart/:id', to: "orders#edit", as: 'shopping_cart'
-
+  post '/order_items/destroy_all', to: "order_items#destroy_all"
   resources :books do
     collection do
       get '/categories/:id', to: "books#by_category", as: 'category'

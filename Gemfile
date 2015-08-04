@@ -10,6 +10,8 @@ gem 'cancancan'
 gem 'kaminari'
 gem 'carrierwave'
 gem 'mini_magick'
+gem 'aws-sdk', '~> 1.36.1'
+gem "fog"
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'bootstrap-sass', '~> 3.3.5'
