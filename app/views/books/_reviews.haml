@@ -1,0 +1,16 @@
+- @book.ratings.each do |rating|
+  %h2.page-header Reviews
+  %section.review-list
+    %article.row
+      .panel.panel-default.arrow.left
+        .panel-body
+          %header.text-left
+            .review-user
+              %i.fa.fa-user
+              = rating.user.full_name
+            %time.review-date
+              %i.fa.fa-clock-o
+              = rating.created_at.strftime("%b %d, %Y")
+          .review-text
+            %p
+              = rating.review

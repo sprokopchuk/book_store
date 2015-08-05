@@ -4,4 +4,4 @@
       %b Categories
   .list-group
     - @categories.each do |cat|
-      = link_to cat.title, category_books_path(cat), class: "list-group-item"
+      = link_to cat.title, category_books_path(cat), class: "list-group-item " + active_class(category_books_path(cat))
