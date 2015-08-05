@@ -26,6 +26,8 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+    # Add items in guest's shopping card into user's shopping card
     def logging_in
       guest_order = guest_user.current_order_in_progress
       current_order =  current_user.current_order_in_progress
@@ -37,7 +39,6 @@ class ApplicationController < ActionController::Base
       else
         current_order.merge guest_order
       end
-      # Add items in guest's shopping card into user's shopping card
     end
 
     def create_guest_user
