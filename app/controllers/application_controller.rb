@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
       if session[:guest_user_id] && session[:guest_user_id] != current_user.id
         logging_in
         guest_user(with_retry = false).try(:destroy)
-        session[:guest_user_id] = nil
+       session[:guest_user_id] = nil
       end
       current_user
     else
@@ -31,14 +31,7 @@ class ApplicationController < ActionController::Base
     def logging_in
       guest_order = guest_user.current_order_in_progress
       current_order =  current_user.current_order_in_progress
-      if current_order.order_items.empty?
-        guest_order.order_items.each do |order_item|
-          order_item.order_id = current_order.id
-          order_item.save!
-        end
-      else
-        current_order.merge guest_order
-      end
+      current_order.merge guest_order
     end
 
     def create_guest_user
@@ -59,7 +52,7 @@ class ApplicationController < ActionController::Base
   protected
     def configure_permitted_parameters
       devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:first_name, :last_name, :email, :password, :password_confirmation) }
-      devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:current_password, :password, :email,
+      devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:current_password, :password, :email, :first_name, :last_name,
                                   :billing_address_attributes => [:address, :city, :country_id, :zipcode, :phone],
                                   :shipping_address_attributes => [:address, :city, :country_id, :zipcode, :phone]) }
     end

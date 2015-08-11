@@ -1,0 +1,21 @@
+.col-sm-12.col-md-10.col-md-offset-1
+  .panel.with-nav-tabs.panel-info
+    .panel-heading
+      .panel-title
+        .row
+          .col-xs-2
+            %h4
+              %b
+                = t("current_order.checkout")
+          %ul.nav.nav-tabs
+            %li.disabled= link_to "Address", "#"
+            %li.active= link_to "Delivery", fill_in_delivery_checkout_path, :"data-toggle" => "tab"
+            %li.disabled= link_to "Payment", "#"
+            %li.disabled= link_to "Confirm", "#"
+            %li.disabled= link_to "Complete", "#"
+    .panel-body
+      = form_for @current_order do |f|
+        .col-xs-3
+          %h3 Delivery
+        .col-xs-6
+          = f.button "Save and Continue", :name => "checkout", value: "address", class: "btn btn-primary"

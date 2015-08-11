@@ -6,22 +6,26 @@
           .col-xs-6
             %h5
               %span.glyphicon.glyphicon-shopping-cart
-              Shopping Cart
+              = t("current_order.shopping_cart")
           .col-xs-6
-            = link_to "Continue shopping", root_path, class: "btn btn-primary btn-block"
-    - if @order.order_items.any?
+            = link_to t("current_order.continue_shopping"), root_path, class: "btn btn-primary btn-block"
+    - if @current_order.order_items.any?
       .panel-body
-        = form_for(@order) do |f|
+        = form_for(@current_order) do |f|
           %table.table.table-hover
             %thead
               %tr
-                %th Book
-                %th Quantity
-                %th.text-center Price
-                %th.text-center Total
+                %th
+                  = t("current_order.book")
+                %th
+                  = t("current_order.quantity")
+                %th.text-center
+                  = t("current_order.price")
+                %th.text-center
+                  = t("current_order.total")
                 %th
             %tbody
-              - @order.order_items.each do |order_item|
+              - @current_order.order_items.each do |order_item|
                 = f.fields_for :order_items, order_item do |item_form|
                   = render partial: 'shared/order_item_form', locals: {item_form: item_form, order_item: order_item}
               %tr
@@ -29,23 +33,25 @@
                 %td
                 %td
                 %td
-                  %h3 Subtotal
+                  %h3
+                  = t("current_order.subtotal")
                 %td
                   %h3
                     %strong
-                      $#{@order.real_price}
+                      $#{@current_order.real_price}
               %tr
                 %td
                 %td
-                  = link_to "Empty cart", order_items_destroy_all_path, method: :post, class: "btn btn-danger btn-block"
+                  = link_to t("current_order.empty_cart"), destroy_all_order_items_path, method: :post, class: "btn btn-danger btn-block"
                 %td
-                  %button.btn.btn-success.btn-block{:type => "button"}
-                    Checkout
+                  = link_to t("current_order.checkout"), fill_in_address_checkout_path, class: "btn btn-success btn-block"
                 %td
-                  %b Coupon code
-                %td= f.submit "Update", class: "btn btn-primary"
+                  %b
+                    = t("current_order.coupon_code")
+                %td= f.button t("current_order.update"), name: "shopping_cart", value: true, class: "btn btn-primary"
     - else
       .panel-footer
         .row.text-center
-          %b Empty cart
+          %b
+            = t("current_order.empty_cart")
 

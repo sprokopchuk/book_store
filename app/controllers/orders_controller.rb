@@ -1,32 +1,39 @@
 class OrdersController < ApplicationController
-  before_action :set_order, only: [:show, :edit, :update]
+
+  before_action :set_current_order, only: [:edit, :update]
   load_and_authorize_resource
 
   def index
-    @orders = Order.all
+    @orders = current_user.orders
   end
 
   def show
+    @order = current_user.orders.find(params[:id])
   end
 
   def edit
   end
 
   def update
-    if @order.update(order_params)
-      redirect_to :back, notice: 'Cart was successfully updated.'
+    if @current_order.update(order_params)
+      if params[:shopping_cart]
+        redirect_to :back, notice: 'Cart was successfully updated.'
+      elsif params[:checkout] == "delivery" && @current_order.next_step_checkout!
+        redirect_to :action => "#{@current_order.aasm.current_state.to_s}", :controller => "orders/checkout"
+      end
     else
       redirect_to :back, notice: 'Something is went wrong.'
     end
   end
 
   private
-    def set_order
-      @order = Order.find(params[:id])
-    end
 
-    def order_params
-      params.require(:order).permit(order_items_attributes: [:id, :quantity])
-    end
+  def set_current_order
+    @current_order = current_or_guest_user.current_order_in_progress
+  end
+
+  def order_params
+    params.require(:order).permit(:delivery_id, :order_items_attributes => [:id, :quantity])
+  end
 
 end

@@ -5,11 +5,10 @@ class RatingsController < ApplicationController
 
   def create
     @rating = current_user.ratings.build(rating_params)
-    puts @rating.attributes
     if @rating.save
-      redirect_to book_path(@current_book.id), notice: 'Review was successfully add.'
+      redirect_to :back, notice: 'Review was successfully add.'
     else
-      redirect_to book_path(@current_book.id), notice: 'Review was not add.Something is wrong'
+      redirect_to :back, notice: 'Review was not add.Something is wrong'
     end
   end
 

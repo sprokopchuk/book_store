@@ -1,17 +1,47 @@
 class Order < ActiveRecord::Base
 
-  scope :in_progress, -> { where(state: "in progress") }
-  STATES = %w{in\ progress in\ queue in\ delivery delivered canceled}
-
+  include AASM
   belongs_to :user
   belongs_to :credit_card
   has_many :order_items
-  belongs_to :billing_address, class_name: "Address", foreign_key: "billing_address_id"
-  belongs_to :shipping_address, class_name: "Address", foreign_key: "shipping_address_id"
+  belongs_to :billing_address, class_name: "Address"
+  belongs_to :shipping_address, class_name: "Address"
+  belongs_to :delivery
   validates :total_price, :state, presence: true
   validates :total_price, numericality: true
-  validates :state, inclusion: {in: STATES}
-  accepts_nested_attributes_for :order_items, allow_destroy: true, :reject_if => :all_blank
+  accepts_nested_attributes_for :order_items, allow_destroy: true
+
+  aasm :whiny_transitions => false, :column => 'state' do
+    state :in_progress, :initial => true
+    state :fill_in_address
+    state :fill_in_delivery
+    state :fill_in_payment
+    state :confirm
+    state :in_queue
+    state :in_delivery
+    state :delivered
+    state :canceled
+
+    event :next_step_checkout do
+      transitions :from => :in_progress, :to => :fill_in_address
+      transitions :from => :fill_in_address, :to => :fill_in_delivery
+      transitions :from => :fill_in_delivery, :to => :fill_in_payment
+      transitions :from => :fill_in_payment, :to => :confirm
+      transitions :from => :confirm, :to => :in_queue
+    end
+
+    event :in_delivering do
+      transitions :from => :in_queue, :to => :in_delivery
+    end
+
+    event :cancel do
+      transitions :from => [:in_queue, :in_delivery] :to => :canceled
+    end
+    event :delivered do
+      transitions :from => :in_delivery, :to => :delivered
+    end
+
+  end
 
   def add order_item
     item = OrderItem.find_by(book_id: order_item.book_id, order_id: self.id)

@@ -1,20 +1,20 @@
 class BooksController < ApplicationController
 
-  before_action :categories, only: [:show, :index, :by_category]
+  before_action :categories, only: [:show, :index]
   before_action :new_order_item, only: :show
   before_action :new_rating, only: :show
 
   def index
-    @books = Book.all.page(params[:page])
+    if params[:category_id]
+      @books = Book.where(category_id: params[:category_id]).page(params[:page])
+      @current_category = current_category params[:category_id]
+    else
+      @books = Book.all.page(params[:page])
+    end
   end
 
   def show
     @book = Book.find(params[:id])
-  end
-
-  def by_category
-    @books = Book.where(category_id: params[:id]).page(params[:page])
-    @current_category = current_category params[:id]
   end
 
   private

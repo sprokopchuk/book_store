@@ -1,0 +1,26 @@
+.col-sm-12.col-md-10.col-md-offset-1
+  .panel.with-nav-tabs.panel-info
+    .panel-heading
+      .panel-title
+        .row
+          .col-xs-2
+            %h4
+              %b
+                = t("current_order.checkout")
+          %ul.nav.nav-tabs
+            %li.active= link_to "Address", fill_in_address_checkout_path, :"data-toggle" => "tab"
+            %li.disabled= link_to "Delivery", "#"
+            %li.disabled= link_to "Payment", "#"
+            %li.disabled= link_to "Confirm", "#"
+            %li.disabled= link_to "Complete", "#"
+    .panel-body
+      .col-xs-4
+        %u
+          %h3 Billing address
+        =form_for current_user, url: checkout_path do |f|
+          = devise_error_messages!
+          = f.fields_for :billing_address, @billing_address do |address_form|
+            = render partial: "shared/fields_address", locals: {address_form: address_form}
+          = f.button "Save and Continue", :name => "checkout", value: "address", class: "btn btn-primary"
+
+

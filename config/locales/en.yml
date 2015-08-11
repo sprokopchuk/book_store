@@ -57,4 +57,17 @@ en:
     rating: "Rating [1-10]"
     text_review: "Text Review"
     add_to_wishlist: "Add to wishes"
-
+    categories: "Categories"
+  current_order:
+    shopping_cart: "Shopping Cart"
+    continue_shopping: "Continue shopping"
+    book: "Book"
+    quantity: "Quantity"
+    price: "Price"
+    total: "Total"
+    subtotal: "Subtotal"
+    empty_cart: "Empty Cart"
+    checkout: "Checkout"
+    coupon_code: "Coupon code"
+    update: "Update"
+    remove: "Remove"

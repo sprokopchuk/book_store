@@ -10,20 +10,6 @@ feature 'User management' do
   given!(:shipping_address) {FactoryGirl.create :address}
   feature 'register a new user' do
 
-    scenario {expect(page).to have_link(I18n.t("settings.register"), href: new_user_registration_path)}
-
-    feature 'should have form for register' do
-      background do
-        click_link I18n.t("settings.register")
-      end
-      scenario {expect(page).to have_field("user[email]") }
-      scenario {expect(page).to have_field("user[password]")}
-      scenario {expect(page).to have_field("user[password_confirmation]")}
-      scenario {expect(page).to have_button(I18n.t("settings.register"))}
-      scenario {expect(page).to have_link(I18n.t("sessions.log_in"), href: new_user_session_path)}
-      scenario {expect(page).to have_link("", href: user_omniauth_authorize_path(:facebook))}
-    end
-
     scenario 'with blank email' do
       click_link I18n.t("settings.register")
       within "#new_user" do
@@ -94,21 +80,7 @@ feature 'User management' do
 
   feature 'log in the user' do
 
-    scenario {expect(page).to have_link(I18n.t("sessions.log_in"), href: new_user_session_path)}
-
-    feature 'should have form for log in' do
-      background do
-        click_link(I18n.t("sessions.log_in"))
-      end
-      scenario {expect(page).to have_field("user[email]")}
-      scenario {expect(page).to have_field("user[password]")}
-      scenario {expect(page).to have_field("user[remember_me]")}
-      scenario {expect(page).to have_button(I18n.t("sessions.log_in"))}
-      scenario {expect(page).to have_link(I18n.t("settings.register"), href: new_user_registration_path)}
-      scenario {expect(page).to have_link(I18n.t("password.fogot_password"), href: new_user_password_path)}
-      scenario {expect(page).to have_link("", href: user_omniauth_authorize_path(:facebook))}
-    end
-    scenario 'with blank email or blank password' do
+      scenario 'with blank email or blank password' do
       click_link I18n.t("sessions.log_in")
       within "#new_user" do
         fill_in "user[email]", with: customer.email
@@ -134,13 +106,6 @@ feature 'User management' do
     background do
       login_as customer, :scope => :user
       visit edit_user_registration_path(customer)
-    end
-    feature 'should have form for settings billing address' do
-      scenario {expect(page).to have_field("user[billing_address_attributes][address]")}
-      scenario {expect(page).to have_field("user[billing_address_attributes][city]")}
-      scenario {expect(page).to have_select("user[billing_address_attributes][country_id]")}
-      scenario {expect(page).to have_field("user[billing_address_attributes][zipcode]")}
-      scenario {expect(page).to have_field("user[billing_address_attributes][phone]")}
     end
 
     feature 'fill in fields for billing address' do
@@ -187,14 +152,6 @@ feature 'User management' do
       end
     end
 
-    feature 'should have form for settings shipping address' do
-      scenario {expect(page).to have_field("user[shipping_address_attributes][address]")}
-      scenario {expect(page).to have_field("user[shipping_address_attributes][city]")}
-      scenario {expect(page).to have_field("user[shipping_address_attributes][country_id]")}
-      scenario {expect(page).to have_field("user[shipping_address_attributes][zipcode]")}
-      scenario {expect(page).to have_field("user[shipping_address_attributes][phone]")}
-    end
-
     feature 'fill in fields for shipping address' do
       background do
         fill_in 'user[current_password]', with: customer.password
@@ -237,12 +194,6 @@ feature 'User management' do
         check_fields_address(shipping_address, "shipping")
       end
     end
-
-    scenario {expect(page).to have_field("user[email]")}
-    scenario {expect(page).to have_field("user[current_password]")}
-    scenario {expect(page).to have_field("user[password]")}
-    scenario {expect(page).to have_button(I18n.t("settings.edit_info.update_info"))}
-    scenario {expect(page).to have_button(I18n.t("settings.edit_info.button_destroy_account"))}
 
     scenario "should have set current password" do
       click_button(I18n.t("settings.edit_info.update_info"))

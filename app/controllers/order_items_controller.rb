@@ -12,13 +12,13 @@ class OrderItemsController < ApplicationController
   end
 
   def destroy
-    @item = OrderItem.find(params[:id])
+    @item = current_or_guest_user.current_order_in_progress.order_items.find(params[:id])
     @item.destroy
     redirect_to :back, notice: 'Book was successfully removed from cart.'
   end
 
   def destroy_all
-    @order_items = current_or_guest_user.current_order_in_progress.order_items.all
+    @order_items = current_or_guest_user.current_order_in_progress.order_items
     @order_items.destroy_all
     redirect_to :back, notice: 'Cart was successfully emptied'
   end

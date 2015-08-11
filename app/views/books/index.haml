@@ -1,5 +1,10 @@
 .col-sm-8.col-md-9
-  %h1= t("header.shop")
+  - if params[:category_id]
+    %h1= @current_category.title
+  - else
+    %h1= t("header.shop")
   = render partial: "list_books", locals: {books: @books}
   = paginate @books
 = render partial: 'shared/categories', locals: {categories: @categories}
+
+

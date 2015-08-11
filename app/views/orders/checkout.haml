@@ -1,0 +1,22 @@
+.col-sm-12.col-md-10.col-md-offset-1
+  .panel.with-nav-tabs.panel-info
+    .panel-heading
+      .panel-title
+        .row
+          .col-xs-2
+            %h4
+              %b
+                = t("current_order.checkout")
+          %ul.nav.nav-tabs
+            %li= link_to "Address", "#tab1", :"data-toggle" => "tab", class: "active"
+            %li= link_to "Delivery", "#tab2", :"data-toggle" => "tab"
+            %li= link_to "Payment", "#tab3", :"data-toggle" => "tab"
+            %li= link_to "Confirm", "#tab4", :"data-toggle" => "tab"
+            %li= link_to "Complete", "#tab5", :"data-toggle" => "tab"
+    .panel-body
+      .tab-content
+        .tab-pane.fade.in#tab1 Address
+        .tab-pane.fade.in#tab2 Delivery
+        .tab-pane.fade.in#tab3 Payment
+        .tab-pane.fade.in#tab4 Confirm
+        .tab-pane.fade.in#tab5 Complete
