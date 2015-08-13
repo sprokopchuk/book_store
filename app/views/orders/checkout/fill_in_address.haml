@@ -8,19 +8,33 @@
               %b
                 = t("current_order.checkout")
           %ul.nav.nav-tabs
-            %li.active= link_to "Address", fill_in_address_checkout_path, :"data-toggle" => "tab"
-            %li.disabled= link_to "Delivery", "#"
-            %li.disabled= link_to "Payment", "#"
-            %li.disabled= link_to "Confirm", "#"
+            %li.active= link_to "Address", fill_in_address_checkout_path
+            %li.disabled= link_to "Delivery", fill_in_delivery_checkout_path
+            %li.disabled= link_to "Payment", fill_in_payment_checkout_path
+            %li.disabled= link_to "Confirm", confirm_checkout_path
             %li.disabled= link_to "Complete", "#"
     .panel-body
-      .col-xs-4
+      .col-xs-4.col-md-offset-1.pull-right
         %u
-          %h3 Billing address
-        =form_for current_user, url: checkout_path do |f|
-          = devise_error_messages!
+          %h3 Order Summary
+        %b Item total:
+        $#{@current_order.real_price}
+        %br
+        %b Order total:
+        $#{@current_order.real_price}
+      =form_for current_user, url: checkout_path do |f|
+        = devise_error_messages!
+        .col-xs-3
+          %u
+            %h3 Billing address
           = f.fields_for :billing_address, @billing_address do |address_form|
             = render partial: "shared/fields_address", locals: {address_form: address_form}
+        .col-xs-3.col-md-offset-1
+          %u
+            %h3 Shipping address
+          = f.fields_for :shipping_address, @shipping_address do |address_form|
+            = render partial: "shared/fields_address", locals: {address_form: address_form}
+        .col-xs-4.col-md-offset-3
           = f.button "Save and Continue", :name => "checkout", value: "address", class: "btn btn-primary"
 
 

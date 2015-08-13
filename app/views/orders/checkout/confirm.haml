@@ -9,9 +9,9 @@
                 = t("current_order.checkout")
           %ul.nav.nav-tabs
             %li= link_to "Address", fill_in_address_checkout_path
-            %li.active= link_to "Delivery", fill_in_delivery_checkout_path
-            %li.disabled= link_to "Payment", fill_in_payment_checkout_path
-            %li.disabled= link_to "Confirm", confirm_checkout_path
+            %li= link_to "Delivery", fill_in_delivery_checkout_path
+            %li= link_to "Payment", fill_in_payment_checkout_path
+            %li.active= link_to "Confirm", confirm_checkout_path
             %li.disabled= link_to "Complete", "#"
     .panel-body
       .col-xs-4.col-md-offset-1.pull-right
@@ -23,14 +23,9 @@
         %b Order total:
         $#{@current_order.real_price}
       = form_for @current_order do |f|
-        .col-xs-3{style: "border: 1px solid red"}
+        = f.hidden_field :credit_card_id, value: current_user.credit_card.id
+        .col-xs-4
           %u
-            %h3 Delivery:
-            %br
-          - @deliveries.each do |delivery|
-            %label
-              = f.radio_button(:delivery_id, delivery.id, checked: delivery.id == @deliveries.first.id)
-              = delivery.name
-              +$#{delivery.price}
-            %br
+            %h3 Confirm:
+          %br
           = f.button "Save and Continue", :name => "checkout", value: "delivery", class: "btn btn-primary"

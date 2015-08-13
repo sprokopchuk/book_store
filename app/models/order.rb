@@ -35,7 +35,7 @@ class Order < ActiveRecord::Base
     end
 
     event :cancel do
-      transitions :from => [:in_queue, :in_delivery] :to => :canceled
+      transitions :from => [:in_queue, :in_delivery], :to => :canceled
     end
     event :delivered do
       transitions :from => :in_delivery, :to => :delivered
@@ -55,8 +55,15 @@ class Order < ActiveRecord::Base
   end
 
   def real_price
-    self.order_items.find_each {|item| self.total_price += item.price * item.quantity }
+    self.total_price = 0
+    self.order_items.find_each do |item|
+      self.total_price += item.price * item.quantity
+    end
     self.total_price
+  end
+
+  def price_with_delivery
+    self.delivery.nil? ? real_price : real_price + delivery.price
   end
 
   def merge other_order

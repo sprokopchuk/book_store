@@ -12,7 +12,6 @@ class Ability
       can :manage, User
       can :manage, Rating
       can :manage, Delivery
-      can [:read, :create, :update], Address, :user_id => user.id
     elsif user.guest?
       can :manage, OrderItem, :user_id => user.id
       can :manage, Order, :user_id => user.id

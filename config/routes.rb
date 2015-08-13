@@ -6,13 +6,11 @@ Rails.application.routes.draw do
   resources :ratings, only: :create
   resources :books, only: [:index, :show], format: false
   resources :orders, except: :destroy
-  resources :addresses, except: :destroy
   resource :checkout, controller: "orders/checkout", only: [:update], format: false do
     get 'fill_in_address'
     get 'fill_in_delivery'
     get 'fill_in_payment'
     get 'confirm'
-    get 'complete'
   end
   resources :order_items, only: [:create, :destroy] do
     collection do

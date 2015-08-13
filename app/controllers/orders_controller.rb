@@ -15,10 +15,15 @@ class OrdersController < ApplicationController
   end
 
   def update
-    if @current_order.update(order_params)
-      if params[:shopping_cart]
-        redirect_to :back, notice: 'Cart was successfully updated.'
-      elsif params[:checkout] == "delivery" && @current_order.next_step_checkout!
+    if params[:shopping_cart] && @current_order.update(order_params)
+      redirect_to :back, notice: 'Cart was successfully updated.'
+    elsif params[:checkout] && @current_order.update(order_params)
+      if @current_order.aasm.current_state == :confirm
+        order_id = @current_order.id
+        @current_order.next_step_checkout!
+        redirect_to order_path(order_id)
+      else
+        @current_order.next_step_checkout!
         redirect_to :action => "#{@current_order.aasm.current_state.to_s}", :controller => "orders/checkout"
       end
     else
@@ -33,7 +38,7 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit(:delivery_id, :order_items_attributes => [:id, :quantity])
+    params.require(:order).permit(:delivery_id, :credit_card_id, :order_items_attributes => [:id, :quantity])
   end
 
 end
