@@ -15,11 +15,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :credit_card
 
   def current_order_in_progress
-    current_order = self.orders.in_progress.take ||
-                    self.orders.fill_in_address.take ||
-                    self.orders.fill_in_delivery.take ||
-                    self.orders.fill_in_payment.take ||
-                    self.orders.confirm.take
+    current_order = self.orders.in_progress.take
     current_order.nil? ? self.orders.create : current_order
   end
 

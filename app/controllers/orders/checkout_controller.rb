@@ -1,8 +1,9 @@
 class Orders::CheckoutController < ApplicationController
 
-  before_action :set_current_order
+  before_action :set_current_order, except: :complete
   before_action :set_addresses, except: :update
-  before_action :set_delivery, only: [:fill_in_delivery, :fill_in_payment, :confirm, :complete]
+  before_action :set_default_delivery, only: :fill_in_delivery
+  before_action :deliveries, only: :fill_in_delivery
   before_action :set_credit_card, only: [:fill_in_payment, :confirm, :complete]
 
   def fill_in_address
@@ -25,21 +26,20 @@ class Orders::CheckoutController < ApplicationController
   end
 
   def fill_in_payment
-    redirect_to_checkout @billing_address, @shipping_address, @current_order.delivery_id, :fill_in_payment
+    redirect_to_checkout @billing_address, @shipping_address, @current_order.delivery, :fill_in_payment
     @credit_card ||= current_user.build_credit_card
     @current_order.aasm.set_current_state_with_persistence :fill_in_payment
   end
 
   def confirm
-    redirect_to_checkout @billing_address, @shipping_address, @current_order.delivery_id, @credit_card, :confirm
+    redirect_to_checkout @billing_address, @shipping_address, @current_order.delivery, @credit_card, :confirm
     @current_order.aasm.set_current_state_with_persistence :confirm
   end
-=begin
-  def in_queue
-    redirect_to_checkout @billing_address, @shipping_address, @credit_card, :in_queue
-    redirect_to confirm_checkout_path if @current_order.aasm.current_state == :confirm
+  def complete
+    @order = Order.find(params[:order_id])
+    redirect_to_checkout @billing_address, @shipping_address, @order.delivery, @credit_card, :in_queue
   end
-=end
+
   private
 
   def redirect_to_checkout *objs, state
@@ -61,7 +61,11 @@ class Orders::CheckoutController < ApplicationController
     @billing_address = current_user.billing_address
     @shipping_address = current_user.shipping_address
   end
-  def set_delivery
+
+  def set_default_delivery
+    @default_delivery = Delivery.first
+  end
+  def deliveries
     @deliveries = Delivery.all
   end
   def set_credit_card

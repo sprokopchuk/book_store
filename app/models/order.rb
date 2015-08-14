@@ -1,6 +1,7 @@
 class Order < ActiveRecord::Base
 
   include AASM
+  scope :in_progress, -> {where state: ['in_progress', "fill_in_address", "fill_in_delivery", "fill_in_payment", "confirm"]}
   belongs_to :user
   belongs_to :credit_card
   has_many :order_items
@@ -30,7 +31,7 @@ class Order < ActiveRecord::Base
       transitions :from => :confirm, :to => :in_queue
     end
 
-    event :in_delivering do
+    event :in_delivery do
       transitions :from => :in_queue, :to => :in_delivery
     end
 

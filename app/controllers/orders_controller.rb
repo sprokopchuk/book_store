@@ -21,7 +21,7 @@ class OrdersController < ApplicationController
       if @current_order.aasm.current_state == :confirm
         order_id = @current_order.id
         @current_order.next_step_checkout!
-        redirect_to order_path(order_id)
+        redirect_to complete_checkout_path(order_id), notice: "Your order was successfully add in queue"
       else
         @current_order.next_step_checkout!
         redirect_to :action => "#{@current_order.aasm.current_state.to_s}", :controller => "orders/checkout"

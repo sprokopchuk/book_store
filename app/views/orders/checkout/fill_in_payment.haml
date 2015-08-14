@@ -20,8 +20,11 @@
         %b Item total:
         $#{@current_order.real_price}
         %br
+        %b Shipping:
+        $#{@current_order.delivery.price}
+        %br
         %b Order total:
-        $#{@current_order.real_price}
+        $#{@current_order.price_with_delivery}
       = form_for current_user,  url: checkout_path do |f|
         = devise_error_messages!
         .col-xs-4
