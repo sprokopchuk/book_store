@@ -13,13 +13,14 @@ class Ability
       can :manage, Rating
       can :manage, Delivery
     elsif user.guest?
-      can :manage, OrderItem, :user_id => user.id
-      can :manage, Order, :user_id => user.id
+      can [:create, :destroy, :destroy_all], OrderItem, :order_id => user.current_order_in_progress.id
+      can :update, Order, :user_id => user.id
+      can :read, Rating, state: "approved"
     else
-      can [:read, :create, :update], Address, :user_id => user.id
-      can [:read, :create], Rating
-      can :manage, OrderItem, :user_id => user.id
-      can :manage, Order, :user_id => user.id
+      can :create, Rating
+      can :read, Rating, state: "approved"
+      can [:create, :destroy, :destroy_all], OrderItem, :order_id => user.current_order_in_progress.id
+      can [:read, :update], Order, :user_id => user.id
     end
   end
 end

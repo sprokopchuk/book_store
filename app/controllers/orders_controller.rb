@@ -4,11 +4,11 @@ class OrdersController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @orders = current_user.orders
+    @orders = current_or_guest_user.orders
   end
 
   def show
-    @order = current_user.orders.find(params[:id])
+    @order = current_or_guest_user.orders.find(params[:id])
   end
 
   def edit
