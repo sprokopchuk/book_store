@@ -7,7 +7,7 @@ class RatingsController < ApplicationController
     if @rating.save
       redirect_to :back, notice: t("ratings.add_success")
     else
-      redirect_to :back, notice: t("ratings.add_wrong")
+      redirect_to :back, notice: t("ratings.add_fail")
     end
   end
 

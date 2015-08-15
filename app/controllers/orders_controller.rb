@@ -1,6 +1,6 @@
 class OrdersController < ApplicationController
 
-  before_action :set_current_order, only: [:edit, :update]
+  before_action :set_current_order
   load_and_authorize_resource
 
   def index
@@ -8,7 +8,7 @@ class OrdersController < ApplicationController
   end
 
   def show
-    @order = current_or_guest_user.orders.find(params[:id])
+    @order = Order.where(id: params[:id], user_id: current_or_guest_user.id)
   end
 
   def edit
@@ -30,6 +30,7 @@ class OrdersController < ApplicationController
       redirect_to :back, notice: 'Something is went wrong.'
     end
   end
+
 
   private
 

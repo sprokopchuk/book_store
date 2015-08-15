@@ -5,7 +5,11 @@ Rails.application.routes.draw do
   devise_for :users,  path: '', path_names: { sign_in: 'login', sign_out: 'logout', password: 'password', registration: 'settings', sign_up: 'register' }, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   resources :ratings, only: :create
   resources :books, only: [:index, :show], format: false
-  resources :orders, except: :destroy
+  resources :orders, except: :destroy do
+    member do
+      put 'change_state', to: 'orders#change_state', as: "change_state"
+    end
+  end
   resource :checkout, controller: "orders/checkout", only: [:update], format: false do
     get 'fill_in_address'
     get 'fill_in_delivery'

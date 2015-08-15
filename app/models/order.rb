@@ -44,6 +44,17 @@ class Order < ActiveRecord::Base
 
   end
 
+  def change_state
+    case self.aasm.current_state
+    when :in_queue
+      self.in_delivery!
+    when :in_delivery
+      self.delivered!
+    else
+      self.cancel!
+    end
+  end
+
   def add order_item
     item = OrderItem.find_by(book_id: order_item.book_id, order_id: self.id)
     if item.nil?

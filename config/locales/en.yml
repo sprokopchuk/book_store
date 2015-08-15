@@ -73,4 +73,10 @@ en:
     remove: "Remove"
   ratings:
     add_success: 'Review was successfully add in moderation.'
-    add_wrong: 'Review was not add.Something is wrong'
+    add_fail: 'Review was not add.Something is wrong'
+  order_items:
+    add_success: 'Book was successfully add to CART.'
+    add_fail: 'Book was not add to CART.Something is wrong'
+    destroy_item: 'Book was successfully removed from cart.'
+    destroy_all_items: 'Cart was successfully emptied'
+

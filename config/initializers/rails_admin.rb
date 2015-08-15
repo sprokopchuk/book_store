@@ -23,6 +23,7 @@ RailsAdmin.config do |config|
     end
     exclude_fields :books
   end
+
   config.model Category do
     exclude_fields :books
   end
@@ -41,7 +42,6 @@ RailsAdmin.config do |config|
     edit
     delete
     show_in_app
-
     ## With an audit adapter, you can add:
     # history_index
     # history_show

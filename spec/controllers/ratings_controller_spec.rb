@@ -43,7 +43,7 @@ RSpec.describe RatingsController, type: :controller do
 
       it "sends fail notice" do
         post :create, rating: rating_params
-        expect(flash[:notice]).to eq I18n.t("ratings.add_wrong")
+        expect(flash[:notice]).to eq I18n.t("ratings.add_fail")
       end
 
       it "redirects to back" do
