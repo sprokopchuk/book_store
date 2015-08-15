@@ -25,7 +25,7 @@
         %br
         %b Order total:
         $#{@current_order.price_with_delivery}
-      = form_for current_user,  url: checkout_path do |f|
+      = form_for current_or_guest_user,  url: checkout_path do |f|
         = devise_error_messages!
         .col-xs-4
           %u
@@ -61,3 +61,4 @@
                 = card.text_field :cvv, class: "form-control", placeholder: "cvv"
           .col-xs-6.col-md-offset-1
             = f.button "Save and Continue", :name => "checkout", value: "payment", class: "btn btn-primary"
+

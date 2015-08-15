@@ -71,3 +71,6 @@ en:
     coupon_code: "Coupon code"
     update: "Update"
     remove: "Remove"
+  ratings:
+    add_success: 'Review was successfully add in moderation.'
+    add_wrong: 'Review was not add.Something is wrong'

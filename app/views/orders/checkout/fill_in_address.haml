@@ -22,7 +22,7 @@
         %br
         %b Order total:
         $#{@current_order.price_with_delivery}
-      =form_for current_user, url: checkout_path do |f|
+      =form_for current_or_guest_user, url: checkout_path do |f|
         = devise_error_messages!
         .col-xs-3
           %u
