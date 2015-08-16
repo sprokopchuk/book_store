@@ -71,6 +71,9 @@ en:
     coupon_code: "Coupon code"
     update: "Update"
     remove: "Remove"
+    add_success: 'Cart was successfully updated.'
+    in_queue: "Your order was successfully add in queue"
+    add_fail: 'Something is went wrong.'
   ratings:
     add_success: 'Review was successfully add in moderation.'
     add_fail: 'Review was not add.Something is wrong'

@@ -5,7 +5,10 @@ Rails.application.routes.draw do
   devise_for :users,  path: '', path_names: { sign_in: 'login', sign_out: 'logout', password: 'password', registration: 'settings', sign_up: 'register' }, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   resources :ratings, only: :create
   resources :books, only: [:index, :show], format: false
-  resources :orders, except: :destroy do
+  resources :orders, except: [:destroy, :edit, :update] do
+    collection do
+      put :update, to: "orders#update"
+    end
     member do
       put 'change_state', to: 'orders#change_state', as: "change_state"
     end
