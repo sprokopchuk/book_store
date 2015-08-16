@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :delivery do
-    name "MyString"
-price 1.5
+    name "New post"
+    price 15
   end
 
 end

@@ -2,8 +2,6 @@ require 'rails_helper'
 RSpec.describe OrdersController, type: :controller do
   let(:order_in_progress) {FactoryGirl.build_stubbed :order}
   let(:order_delivered) {FactoryGirl.build_stubbed :order_delivered}
-  let(:book) {FactoryGirl.create :book}
-  let(:ability) { Ability.new(authenticated_user) }
   let(:authenticated_user) {FactoryGirl.create :user}
   let(:order_item) {FactoryGirl.build_stubbed :order_item}
   let(:order_params) {{"order_items_attributes" => {"0" => {"id" => order_item.id.to_s, "quantity" => order_item.quantity.to_s}}}}
