@@ -15,7 +15,7 @@ class Orders::CheckoutController < ApplicationController
   end
 
   def fill_in_delivery
-    redirect_to_checkout @billing_address, @shipping_address, :fill_in_delivery
+    redirect_to_checkout @current_order
     @current_order.aasm.set_current_state_with_persistence :fill_in_delivery
   end
 
@@ -28,31 +28,26 @@ class Orders::CheckoutController < ApplicationController
   end
 
   def fill_in_payment
-    redirect_to_checkout @billing_address, @shipping_address, @current_order.delivery_id, :fill_in_payment
+    redirect_to_checkout @current_order
     @credit_card ||= current_or_guest_user.build_credit_card
     @current_order.aasm.set_current_state_with_persistence :fill_in_payment
   end
 
   def confirm
-    redirect_to_checkout @billing_address, @shipping_address, @current_order.delivery_id, @credit_card, :confirm
+    redirect_to_checkout @current_order
     @current_order.aasm.set_current_state_with_persistence :confirm
   end
   def complete
     @order = Order.find(params[:order_id])
-    redirect_to_checkout @billing_address, @shipping_address, @order.delivery_id, @credit_card, :in_queue
+    redirect_to_checkout @order
   end
 
   private
 
-  def redirect_to_checkout *objs, state
-    objs.each do |obj|
-      if obj.nil?
-        redirect_to fill_in_address_checkout_path and return if state != :fill_in_address
-        redirect_to fill_in_delivery_path and return if state != :fill_in_delivery
-        redirect_to fill_in_payment_path and return if state != :fill_in_payment
-        redirect_to confirm_path and return if state != :confirm
-      end
-    end
+  def redirect_to_checkout current_order
+    redirect_to fill_in_address_checkout_path and return unless current_order.billing_address && current_order.shipping_address
+    redirect_to fill_in_delivery_path and return unless current_order.delivery
+    redirect_to fill_in_payment_path and return current_order.credit_card
   end
 
   def set_current_order

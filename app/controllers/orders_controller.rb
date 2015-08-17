@@ -8,7 +8,7 @@ class OrdersController < ApplicationController
   end
 
   def show
-    @order = current_or_guest_user.orders.find(params[:id])
+    @order = Order.find(params[:id])
   end
 
   def edit

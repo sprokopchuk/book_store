@@ -1,13 +1,12 @@
 require 'rails_helper'
 RSpec.describe OrdersController, type: :controller do
   let(:order_in_progress) {FactoryGirl.build_stubbed :order, user: authenticated_user}
-  let(:other_order) {FactoryGirl.build_stubbed :order}
   let(:order_delivered) {FactoryGirl.build_stubbed :order_delivered, user: authenticated_user}
   let(:authenticated_user) {FactoryGirl.create :user}
   let(:order_item) {FactoryGirl.build_stubbed :order_item}
   let(:order_params) {{"order_items_attributes" => {"0" => {"id" => order_item.id.to_s, "quantity" => order_item.quantity.to_s}}}}
-
   before(:each) do
+    request.env["devise.mapping"] = Devise.mappings[:authenticated_user]
     request.env["HTTP_REFERER"] = "localhost:3000/where_i_came_from"
     allow(authenticated_user).to receive(:current_order_in_progress).and_return order_in_progress
     allow(controller).to receive(:current_or_guest_user).and_return authenticated_user
@@ -17,7 +16,6 @@ RSpec.describe OrdersController, type: :controller do
       allow(authenticated_user).to receive(:orders).and_return [order_in_progress, order_delivered]
       allow(authenticated_user).to receive(:current_order_in_progress).and_return order_in_progress
       allow(controller).to receive(:current_or_guest_user).and_return authenticated_user
-
     end
     it "receives orders and return all orders" do
       expect(authenticated_user).to receive(:orders).and_return [order_in_progress, order_delivered]
@@ -32,26 +30,22 @@ RSpec.describe OrdersController, type: :controller do
 
   describe 'GET #show' do
     before do
-      allow(authenticated_user).to receive_message_chain(:orders, :find).and_return order_delivered
+      allow(Order).to receive(:find).and_return order_delivered
       allow(authenticated_user).to receive(:current_order_in_progress).and_return order_in_progress
       allow(controller).to receive(:current_or_guest_user).and_return authenticated_user
     end
 
-    xit "receives find and return order" do
-      expect(authenticated_user).to receive_message_chain(:orders, :find).with(order_delivered.id.to_s)
+    it "receives find and return order" do
+      expect(Order).to receive(:find).with(order_delivered.id.to_s)
       get :show, id: order_delivered.id
     end
 
-    it "receives find and generate RecordNotFound when order is not current user's" do
-      expect{get :show, id: other_order.id}.to raise_error(ActiveRecord::RecordNotFound)
-    end
-
-    xit "assigns @order" do
+    it "assigns @order" do
       get :show, id: order_delivered.id
       expect(assigns(:order)).not_to be_nil
     end
 
-    xit "renders :show template" do
+    it "renders :show template" do
       get :show, id: order_delivered.id
       expect(response).to render_template :show
     end
@@ -126,4 +120,28 @@ RSpec.describe OrdersController, type: :controller do
       end
     end
   end
+
+  describe "user abilities" do
+    let(:ability) {Ability.new(authenticated_user)}
+    let(:other_order) {FactoryGirl.build_stubbed :order}
+
+    before do
+      allow(Order).to receive(:find).and_return other_order
+      allow(controller).to receive(:current_ability).and_return(ability)
+      ability.can [:read, :update], Order, :user_id => authenticated_user.id
+      sign_in authenticated_user
+    end
+
+    context "#show" do
+      context "cancan doesnt allow :show order which is not current user's" do
+        before do
+          get :show, id: other_order.id
+        end
+        it {expect(response).to redirect_to root_path }
+        it {expect(flash[:alert]).to eq("You are not authorized to access this page.")}
+      end
+    end
+
+  end
+
 end
