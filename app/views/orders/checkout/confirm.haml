@@ -14,7 +14,7 @@
             %li.active= link_to "Confirm", confirm_checkout_path
             %li.disabled= link_to "Complete", "#"
     .panel-body
-      = form_for @current_order do |f|
+      = form_for @current_order, url: orders_path, method: :put do |f|
         = f.hidden_field :credit_card_id, value: current_or_guest_user.credit_card.id
         .col-xs-12
           %u

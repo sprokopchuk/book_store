@@ -20,19 +20,16 @@
         %b Item total:
         $#{@current_order.real_price}
         %br
-        %b Shipping:
-        $#{@current_order.delivery.price || @default_delivery.price}
-        %br
         %b Order total:
         $#{@current_order.price_with_delivery}
-      = form_for @current_order do |f|
+      = form_for @current_order, url: orders_path, method: :put  do |f|
         .col-xs-3
           %u
             %h3 Delivery:
             %br
           - @deliveries.each do |delivery|
             %label
-              = f.radio_button(:delivery_id, delivery.id, checked: delivery.id == @current_order.delivery.id || delivery.id== @deliveries.first.id)
+              = f.radio_button(:delivery_id, delivery.id)
               = delivery.name
               +$#{delivery.price}
             %br
