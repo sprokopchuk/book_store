@@ -28,18 +28,18 @@ class Orders::CheckoutController < ApplicationController
   end
 
   def fill_in_payment
-    redirect_to_checkout @billing_address, @shipping_address, @current_order.delivery, :fill_in_payment
+    redirect_to_checkout @billing_address, @shipping_address, @current_order.delivery_id, :fill_in_payment
     @credit_card ||= current_or_guest_user.build_credit_card
     @current_order.aasm.set_current_state_with_persistence :fill_in_payment
   end
 
   def confirm
-    redirect_to_checkout @billing_address, @shipping_address, @current_order.delivery, @credit_card, :confirm
+    redirect_to_checkout @billing_address, @shipping_address, @current_order.delivery_id, @credit_card, :confirm
     @current_order.aasm.set_current_state_with_persistence :confirm
   end
   def complete
     @order = Order.find(params[:order_id])
-    redirect_to_checkout @billing_address, @shipping_address, @order.delivery, @credit_card, :in_queue
+    redirect_to_checkout @billing_address, @shipping_address, @order.delivery_id, @credit_card, :in_queue
   end
 
   private

@@ -92,31 +92,31 @@
                   %td.col-sm-2.col-md-2.text-center
                     %strong
                       $#{order_item.total_price}
-                %tr
-                  %td
-                  %td
-                  %td.text-center
-                    %h4= t("current_order.subtotal")
-                  %td
-                    %h4
-                      %strong $#{@current_order.real_price}
-                %tr
-                  %td
-                  %td
-                  %td.text-center
-                    %h4 Shipping:
-                  %td
-                    %h4
-                      %strong
-                        $#{@current_order.delivery.price}
-                %tr
-                  %td
-                  %td
-                  %td.text-center
-                    %h4 Order total:
-                  %td
-                    %h4
-                      %strong
-                        $#{@current_order.price_with_delivery}
+              %tr
+                %td
+                %td
+                %td.text-center
+                  %h4= t("current_order.subtotal")
+                %td
+                  %h4
+                    %strong $#{@current_order.real_price}
+              %tr
+                %td
+                %td
+                %td.text-center
+                  %h4 Shipping:
+                %td
+                  %h4
+                    %strong
+                      $#{@current_order.delivery.price}
+              %tr
+                %td
+                %td
+                %td.text-center
+                  %h4 Order total:
+                %td
+                  %h4
+                    %strong
+                      $#{@current_order.price_with_delivery}
         .col-xs-3
           = f.button "Plce order", :name => "checkout", value: "confirm", class: "btn btn-primary"

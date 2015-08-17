@@ -29,7 +29,7 @@
             %br
           - @deliveries.each do |delivery|
             %label
-              = f.radio_button(:delivery_id, delivery.id)
+              = f.radio_button(:delivery_id, delivery.id, checked: delivery.id== @deliveries.first.id)
               = delivery.name
               +$#{delivery.price}
             %br
