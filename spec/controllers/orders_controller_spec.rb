@@ -1,7 +1,8 @@
 require 'rails_helper'
 RSpec.describe OrdersController, type: :controller do
-  let(:order_in_progress) {FactoryGirl.build_stubbed :order}
-  let(:order_delivered) {FactoryGirl.build_stubbed :order_delivered}
+  let(:order_in_progress) {FactoryGirl.build_stubbed :order, user: authenticated_user}
+  let(:other_order) {FactoryGirl.build_stubbed :order}
+  let(:order_delivered) {FactoryGirl.build_stubbed :order_delivered, user: authenticated_user}
   let(:authenticated_user) {FactoryGirl.create :user}
   let(:order_item) {FactoryGirl.build_stubbed :order_item}
   let(:order_params) {{"order_items_attributes" => {"0" => {"id" => order_item.id.to_s, "quantity" => order_item.quantity.to_s}}}}
@@ -42,7 +43,7 @@ RSpec.describe OrdersController, type: :controller do
     end
 
     it "receives find and generate RecordNotFound when order is not current user's" do
-      expect{get :show, id: order_in_progress.id}.to raise_error(ActiveRecord::RecordNotFound)
+      expect{get :show, id: other_order.id}.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     xit "assigns @order" do
