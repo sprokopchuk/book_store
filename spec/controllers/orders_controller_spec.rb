@@ -37,8 +37,8 @@ RSpec.describe OrdersController, type: :controller do
       allow(controller).to receive(:current_or_guest_user).and_return authenticated_user
     end
 
-    it "receives find and return order" do
-      expect(Order).to receive(:find).with(order_delivered.id.to_s)
+    xit "receives find and return order" do
+      expect(authenticated_user).to receive_message_chain(:orders, :find).with(order_delivered.id.to_s)
       get :show, id: order_delivered.id
     end
 
