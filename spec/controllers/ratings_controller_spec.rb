@@ -6,13 +6,15 @@ RSpec.describe RatingsController, type: :controller do
   let(:rating) {FactoryGirl.build_stubbed :rating}
   before(:each) do
     request.env["HTTP_REFERER"] = "localhost:3000/where_i_came_from"
+    allow(controller).to receive(:current_or_guest_user).and_return authenticated_user
   end
   describe 'POST #create' do
+    before do
+      allow(authenticated_user).to receive_message_chain(:ratings, :build).and_return rating
+    end
     context "with valid attributes" do
       before do
-        rating.stub(:save).and_return(true)
-        authenticated_user.stub_chain(:ratings, :build).and_return rating
-        controller.stub(:current_or_guest_user).and_return authenticated_user
+        allow(rating).to receive(:save).and_return(true)
       end
 
       it "assigns @rating" do
@@ -36,9 +38,7 @@ RSpec.describe RatingsController, type: :controller do
     end
     context "with invalid attributes" do
       before do
-        rating.stub(:save).and_return false
-        authenticated_user.stub_chain(:ratings, :build).and_return rating
-        controller.stub(:current_or_guest_user).and_return authenticated_user
+        allow(rating).to receive(:save).and_return false
       end
 
       it "sends fail notice" do
@@ -53,9 +53,7 @@ RSpec.describe RatingsController, type: :controller do
     end
     context "with forbidden attributes" do
       before do
-        rating.stub(:save).and_return true
-        authenticated_user.stub_chain(:ratings, :build).and_return rating
-        controller.stub(:current_or_guest_user).and_return authenticated_user
+        allow(rating).to receive(:save).and_return true
       end
       it "generates ParameterMissing error without rating params" do
         expect{post :create}.to raise_error(ActionController::ParameterMissing)
@@ -66,4 +64,5 @@ RSpec.describe RatingsController, type: :controller do
       end
     end
   end
+
 end

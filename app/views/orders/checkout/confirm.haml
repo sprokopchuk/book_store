@@ -15,11 +15,11 @@
             %li.disabled= link_to "Complete", "#"
     .panel-body
       = form_for @current_order, url: orders_path, method: :put do |f|
-        = f.hidden_field :credit_card_id, value: current_or_guest_user.credit_card.id
+        = f.hidden_field :change_state, value: "in_queue"
         .col-xs-12
           %u
             %h3 Confirm:
-          %br
+            %br
           %address.col-xs-3
             %h4
               %b Billing Address
@@ -59,6 +59,7 @@
             %h4
               %b Payments Information
               = link_to "(edit)", fill_in_payment_checkout_path
+            %br
             = current_or_guest_user.credit_card.number
             %br
             #{current_or_guest_user.credit_card.exp_month}/#{current_or_guest_user.credit_card.exp_year}
@@ -119,4 +120,4 @@
                     %strong
                       $#{@current_order.price_with_delivery}
         .col-xs-3
-          = f.button "Plce order", :name => "checkout", value: "confirm", class: "btn btn-primary"
+          = f.button "Plce order", :name => "change_state", value: "in_queue", class: "btn btn-primary"

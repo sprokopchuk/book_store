@@ -98,13 +98,13 @@ RSpec.describe OrdersController, type: :controller do
       it "redirects from confirm to complete" do
         allow(order_in_progress).to receive(:next_step_checkout!).and_return true
         allow(order_in_progress).to receive_message_chain(:aasm, :current_state).and_return :confirm
-        put :update, checkout: true, order: order_params
+        put :update, change_state: true, order: order_params
         expect(response).to redirect_to complete_checkout_path(order_in_progress)
       end
       it "sends success notice when current order in queue" do
         allow(order_in_progress).to receive(:next_step_checkout!).and_return true
         allow(order_in_progress).to receive_message_chain(:aasm, :current_state).and_return :confirm
-        put :update, checkout: true, order: order_params
+        put :update, change_state: true, order: order_params
         expect(flash[:notice]).to eq(I18n.t("current_order.in_queue"))
       end
     end
@@ -122,10 +122,11 @@ RSpec.describe OrdersController, type: :controller do
   end
 
   describe "user abilities" do
-    let(:ability) {Ability.new(authenticated_user)}
+    let(:ability) {Object.new}
     let(:other_order) {FactoryGirl.build_stubbed :order}
-
+    let(:guest_user) {FactoryGirl.build_stubbed :guest_user}
     before do
+      ability.extend(CanCan::Ability)
       allow(Order).to receive(:find).and_return other_order
       allow(controller).to receive(:current_ability).and_return(ability)
       ability.can [:read, :update], Order, :user_id => authenticated_user.id
@@ -141,7 +142,6 @@ RSpec.describe OrdersController, type: :controller do
         it {expect(flash[:alert]).to eq("You are not authorized to access this page.")}
       end
     end
-
   end
 
 end

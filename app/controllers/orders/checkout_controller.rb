@@ -1,12 +1,11 @@
 class Orders::CheckoutController < ApplicationController
 
   before_action :authenticate_user!
-
   before_action :set_current_order, except: :complete
-  before_action :set_addresses, except: :update
+  before_action :set_addresses, only: [:fill_in_address, :confirm]
   before_action :set_default_delivery, only: :fill_in_delivery
   before_action :deliveries, only: :fill_in_delivery
-  before_action :set_credit_card, only: [:fill_in_payment, :confirm, :complete]
+  before_action :set_credit_card, only: :fill_in_payment
 
   def fill_in_address
     @billing_address ||= current_or_guest_user.build_billing_address
@@ -15,7 +14,8 @@ class Orders::CheckoutController < ApplicationController
   end
 
   def fill_in_delivery
-    redirect_to_checkout @current_order
+    keys = keys_redirect @current_order, :fill_in_delivery, 1
+    redirect_to :action => "#{keys[0]}", :controller => "orders/checkout" if keys.any?
     @current_order.aasm.set_current_state_with_persistence :fill_in_delivery
   end
 
@@ -28,26 +28,36 @@ class Orders::CheckoutController < ApplicationController
   end
 
   def fill_in_payment
-    redirect_to_checkout @current_order
+    keys = keys_redirect @current_order, :fill_in_payment, 2
+    redirect_to :action => "#{keys[0]}", :controller => "orders/checkout" if keys.any?
     @credit_card ||= current_or_guest_user.build_credit_card
     @current_order.aasm.set_current_state_with_persistence :fill_in_payment
   end
 
   def confirm
-    redirect_to_checkout @current_order
+    keys = keys_redirect @current_order, :confirm, 3
+    redirect_to :action => "#{keys[0]}", :controller => "orders/checkout" if keys.any?
     @current_order.aasm.set_current_state_with_persistence :confirm
   end
   def complete
-    @order = Order.find(params[:order_id])
-    redirect_to_checkout @order
+    @order = Order.find(params[:id])
+    authorize! :complete, @order
   end
 
   private
 
-  def redirect_to_checkout current_order
-    redirect_to fill_in_address_checkout_path and return unless current_order.billing_address && current_order.shipping_address
-    redirect_to fill_in_delivery_path and return unless current_order.delivery
-    redirect_to fill_in_payment_path and return current_order.credit_card
+  def keys_redirect order, state, num
+    objs = {:fill_in_address => [order.user.billing_address, order.user.shipping_address],
+            :fill_in_delivery => [order.delivery_id],
+            :fill_in_payment => [order.credit_card]}
+    keys_redirect = []
+    objs.keys.take(num).each do |key|
+      case objs[key].length
+        when 2 then keys_redirect << key if objs[key][0].nil? || objs[key][1].nil?
+        when 1 then keys_redirect << key if objs[key][0].nil?
+      end
+    end
+    keys_redirect
   end
 
   def set_current_order
@@ -60,7 +70,8 @@ class Orders::CheckoutController < ApplicationController
   end
 
   def set_default_delivery
-    @default_delivery = Delivery.first
+    @default_delivery = current_or_guest_user.current_order_in_progress.delivery
+    @default_delivery ||= Delivery.first
   end
   def deliveries
     @deliveries = Delivery.all
@@ -71,7 +82,8 @@ class Orders::CheckoutController < ApplicationController
   def user_params
     params.require(:user).permit(:billing_address_attributes => [:address, :city, :country_id, :zipcode, :phone, :id],
                                   :shipping_address_attributes => [:address, :city, :country_id, :zipcode, :phone, :id],
-                                  :credit_card_attributes =>[:number, :cvv, :exp_month, :exp_year, :first_name, :last_name, :id])
+                                  :credit_card_attributes =>[:number, :cvv, :exp_month, :exp_year, :first_name, :last_name, :id],
+                                  :orders_attributes => [:credit_card_id, :id])
   end
 
 end

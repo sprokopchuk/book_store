@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :billing_address, :reject_if => :all_blank
   accepts_nested_attributes_for :shipping_address, :reject_if => :all_blank
   accepts_nested_attributes_for :credit_card
+  accepts_nested_attributes_for :orders
 
   def current_order_in_progress
     current_order = self.orders.in_progress.take

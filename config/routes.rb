@@ -18,7 +18,7 @@ Rails.application.routes.draw do
     get 'fill_in_delivery'
     get 'fill_in_payment'
     get 'confirm'
-    get 'complete/:order_id', to: 'orders/checkout#complete', as: :complete
+    get 'complete/:id', to: 'orders/checkout#complete', as: :complete
   end
   resources :order_items, only: [:create, :destroy] do
     collection do

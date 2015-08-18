@@ -31,6 +31,8 @@
           %u
             %h3 Payment:
           %br
+          = f.fields_for :orders, @current_order do |order|
+            = order.hidden_field :credit_card_id, value: current_or_guest_user.credit_card.id
           = f.fields_for :credit_card, @credit_card do |card|
             .col-xs-12
               %h4
@@ -51,10 +53,10 @@
                 %label Card Expiry Date
             .col-xs-6.col-md-6
               .form-group
-                = card.text_field :exp_month, class: "form-control", placeholder: "MM"
+                = card.number_field :exp_month, min: 1, max: 12, class: "form-control", placeholder: "MM"
             .col-xs-6.col-md-6
               .form-group
-                = card.text_field :exp_year, class: "form-control", placeholder: "YY"
+                = card.number_field :exp_year, min: Time.now.year, class: "form-control", placeholder: "YY"
             .col-xs-6
               %label CVV code
               .form-group

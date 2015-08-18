@@ -17,6 +17,7 @@ class Ability
       can :update, Order, :user_id => user.id
       can :read, Rating, state: "approved"
     else
+      can :complete, Order, :user_id => user.id, state: "in_queue"
       can :create, Rating
       can :read, Rating, state: "approved"
       can [:create, :destroy, :destroy_all], OrderItem, :order_id => user.current_order_in_progress.id
