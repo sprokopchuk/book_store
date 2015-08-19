@@ -29,14 +29,14 @@ class Order < ActiveRecord::Base
       transitions :from => :confirm, :to => :in_queue
     end
 
-    event :in_delivery do
+    event :confirm do
       transitions :from => :in_queue, :to => :in_delivery
     end
 
     event :cancel do
       transitions :from => [:in_queue, :in_delivery], :to => :canceled
     end
-    event :delivered do
+    event :finish do
       transitions :from => :in_delivery, :to => :delivered
     end
 

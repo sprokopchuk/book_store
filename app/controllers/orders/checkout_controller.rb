@@ -8,12 +8,14 @@ class Orders::CheckoutController < ApplicationController
   before_action :set_credit_card, only: :fill_in_payment
 
   def fill_in_address
+    authorize! :fill_in_address, @current_order
     @billing_address ||= current_or_guest_user.build_billing_address
     @shipping_address ||= current_or_guest_user.build_shipping_address
     @current_order.aasm.set_current_state_with_persistence :fill_in_address
   end
 
   def fill_in_delivery
+    authorize! :fill_in_delivery, @current_order
     keys = keys_redirect @current_order, :fill_in_delivery, 1
     redirect_to :action => "#{keys[0]}", :controller => "orders/checkout" if keys.any?
     @current_order.aasm.set_current_state_with_persistence :fill_in_delivery
@@ -28,6 +30,7 @@ class Orders::CheckoutController < ApplicationController
   end
 
   def fill_in_payment
+    authorize! :fill_in_payment, @current_order
     keys = keys_redirect @current_order, :fill_in_payment, 2
     redirect_to :action => "#{keys[0]}", :controller => "orders/checkout" if keys.any?
     @credit_card ||= current_or_guest_user.build_credit_card
@@ -35,6 +38,7 @@ class Orders::CheckoutController < ApplicationController
   end
 
   def confirm
+    authorize! :confirm, @current_order
     keys = keys_redirect @current_order, :confirm, 3
     redirect_to :action => "#{keys[0]}", :controller => "orders/checkout" if keys.any?
     @current_order.aasm.set_current_state_with_persistence :confirm

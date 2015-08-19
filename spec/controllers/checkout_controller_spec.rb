@@ -35,7 +35,7 @@ RSpec.describe Orders::CheckoutController, type: :controller do
     end
 
     it "renders fill_in_delivery template" do
-      allow(controller).to receive(:redirect_to_checkout).and_return true
+      allow(controller).to receive(:keys_redirect).and_return []
       get :fill_in_delivery
       expect(response).to render_template :fill_in_delivery
     end
@@ -52,8 +52,8 @@ RSpec.describe Orders::CheckoutController, type: :controller do
       get :fill_in_payment
     end
 
-    it "renders fill_in_delivery template" do
-      allow(controller).to receive(:redirect_to_checkout).and_return true
+    it "renders :fill_in_payment template" do
+      allow(controller).to receive(:keys_redirect).and_return []
       get :fill_in_payment
       expect(response).to render_template :fill_in_payment
     end
@@ -62,17 +62,59 @@ RSpec.describe Orders::CheckoutController, type: :controller do
       get :fill_in_payment
       expect(response).to redirect_to fill_in_address_checkout_path
     end
-    xit "redirects to fill_in_delivery if delivery is nil" do
+    it "redirects to fill_in_delivery if delivery is nil" do
+      allow(controller).to receive(:keys_redirect).and_return [:fill_in_delivery]
       get :fill_in_payment
       expect(response).to redirect_to fill_in_delivery_checkout_path
     end
   end
 
   describe "GET #confirm" do
+    it "receives set_current_state_with_persistence and set current order's state in confirm" do
+      expect(order_in_progress).to receive_message_chain(:aasm, :set_current_state_with_persistence).with(:confirm)
+      get :confirm
+    end
+
+    it "renders :confirm template" do
+      allow(controller).to receive(:keys_redirect).and_return []
+      get :confirm
+      expect(response).to render_template :confirm
+    end
+
+    it "redirects to fill_in_address if billing_address or shipping_address is nil" do
+      get :confirm
+      expect(response).to redirect_to fill_in_address_checkout_path
+    end
+    it "redirects to fill_in_delivery if delivery is nil" do
+      allow(controller).to receive(:keys_redirect).and_return [:fill_in_delivery]
+      get :confirm
+      expect(response).to redirect_to fill_in_delivery_checkout_path
+    end
+
+    it "redirects to fill_in_payment if credit card for order is nil" do
+      allow(controller).to receive(:keys_redirect).and_return [:fill_in_payment]
+      get :confirm
+      expect(response).to redirect_to fill_in_payment_checkout_path
+    end
 
   end
 
   describe "GET #complete" do
+    context "cancan doesn't allow user :complete if order is not in state in_queue" do
+      it "redirects to root path" do
+      end
+
+      it "sends flash notice" do
+      end
+    end
+
+    context "cancan  doesn't allow user :complete if order is't user's" do
+      it "redirects to root path" do
+      end
+
+      it "sends flash notice" do
+      end
+    end
 
   end
 
