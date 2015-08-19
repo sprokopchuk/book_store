@@ -59,6 +59,21 @@ RSpec.describe Ability, type: :model do
       it {expect(subject).not_to be_able_to(:create, Order)}
       it {expect(subject).not_to be_able_to(:destroy, order)}
       it {expect(subject).not_to be_able_to(:manage, other_order)}
+      it "should not be able to complete if order's state is not in_queue" do
+        expect(subject).not_to be_able_to(:complete, order)
+      end
+      it "should not be able to fill_in_address if order's price is 0" do
+        expect(subject).not_to be_able_to(:fill_in_address, order)
+      end
+      it "should not be able to fill_in_delivery if order's price is 0" do
+        expect(subject).not_to be_able_to(:fill_in_delivery, order)
+      end
+      it "should not be able to fill_in_payment if order's price is 0" do
+        expect(subject).not_to be_able_to(:fill_in_payment, order)
+      end
+      it "should not be able to confirm if order's price is 0" do
+        expect(subject).not_to be_able_to(:confirm, order)
+      end
     end
     context "for order items" do
       let(:order) {FactoryGirl.create :order, user: authenticated_user}
@@ -85,8 +100,6 @@ RSpec.describe Ability, type: :model do
   describe "abilities of admin user" do
     let(:admin) {FactoryGirl.create :admin}
     subject {Ability.new(admin)}
-    it {expect(subject).to be_able_to(:manage, Order)}
-    it {expect(subject).to be_able_to(:manage, OrderItem)}
     it {expect(subject).to be_able_to(:manage, Book)}
     it {expect(subject).to be_able_to(:manage, Category)}
     it {expect(subject).to be_able_to(:manage, Author)}
@@ -94,5 +107,29 @@ RSpec.describe Ability, type: :model do
     it {expect(subject).to be_able_to(:manage, Delivery)}
     it {expect(subject).not_to be_able_to(:manage, Address)}
     it {expect(subject).not_to be_able_to(:manage, CreditCard)}
+    context 'for orders' do
+      let(:order) {FactoryGirl.create :order, user: admin}
+      it {expect(subject).to be_able_to(:read, Order)}
+      it {expect(subject).to be_able_to(:update, Order)}
+      it {expect(subject).to be_able_to(:create, Order)}
+      it {expect(subject).to be_able_to(:destroy, Order)}
+      it {expect(subject).to be_able_to(:state, Order)}
+      it {expect(subject).to be_able_to(:all_events, Order)}
+      it "should not be able to complete if order's state is not in_queue" do
+        expect(subject).not_to be_able_to(:complete, order)
+      end
+      it "should not be able to fill_in_address if order's price is 0" do
+        expect(subject).not_to be_able_to(:fill_in_address, order)
+      end
+      it "should not be able to fill_in_delivery if order's price is 0" do
+        expect(subject).not_to be_able_to(:fill_in_delivery, order)
+      end
+      it "should not be able to fill_in_payment if order's price is 0" do
+        expect(subject).not_to be_able_to(:fill_in_payment, order)
+      end
+      it "should not be able to confirm if order's price is 0" do
+        expect(subject).not_to be_able_to(:confirm, order)
+      end
+    end
   end
 end
