@@ -24,8 +24,6 @@ class Orders::CheckoutController < ApplicationController
   def update
     if current_or_guest_user.update_without_password(user_params) && @current_order.next_step_checkout!
       redirect_to :action => "#{@current_order.aasm.current_state.to_s}", :controller => "orders/checkout"
-    else
-      redirect_to :back
     end
   end
 
