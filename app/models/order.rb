@@ -60,7 +60,9 @@ class Order < ActiveRecord::Base
     end
     self.total_price
   end
-
+  def ready_to_checkout?
+    self.real_price > 0
+  end
   def price_with_delivery
     self.delivery.nil? ? real_price : real_price + delivery.price
   end

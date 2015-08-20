@@ -11,7 +11,7 @@ class Orders::CheckoutController < ApplicationController
     authorize! :fill_in_address, @current_order
     @billing_address ||= current_or_guest_user.build_billing_address
     @shipping_address ||= current_or_guest_user.build_shipping_address
-    @current_order.aasm.set_current_state_with_persistence :fill_in_address
+    @current_order.aasm.set_current_state_with_persistence :fill_in_a ddress
   end
 
   def fill_in_delivery

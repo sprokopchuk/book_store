@@ -9,4 +9,9 @@ class Book < ActiveRecord::Base
   def in_stock?
     self.in_stock > 0 ? true : false
   end
+
+  def self.search query
+    query.downcase!
+    joins(:author).where('lower(trim(authors.first_name) || \' \' || trim(authors.last_name)) LIKE :search OR lower(books.title) LIKE :search OR lower(authors.first_name) LIKE :search OR lower(authors.last_name) LIKE :search', search: "%#{query}%")
+  end
 end
