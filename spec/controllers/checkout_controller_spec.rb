@@ -10,10 +10,7 @@ RSpec.describe Orders::CheckoutController, type: :controller do
 
   before(:each) do
     request.env["HTTP_REFERER"] = "localhost:3000/where_i_came_from"
-    allow(authenticated_user).to receive(:build_billing_address).and_return billing_address
-    allow(authenticated_user).to receive(:build_shipping_address).and_return shipping_address
     allow(authenticated_user).to receive(:current_order_in_progress).and_return order_in_progress
-    allow(order_in_progress).to receive(:real_price).and_return 45
     allow(order_in_progress).to receive_message_chain(:aasm, :set_current_state_with_persistence).and_return true
     allow(controller).to receive(:authenticate_user!).and_return(true)
     allow(controller).to receive(:current_or_guest_user).and_return authenticated_user
@@ -30,17 +27,6 @@ RSpec.describe Orders::CheckoutController, type: :controller do
       expect(response).to render_template :fill_in_address
     end
 
-    it "redirects to root path if price of current order is 0" do
-      allow(order_in_progress).to receive(:real_price).and_return 0
-      get :fill_in_address
-      expect(response).to redirect_to root_path
-    end
-
-    it "sends flash alert id price of current order is 0" do
-      allow(order_in_progress).to receive(:real_price).and_return 0
-      get :fill_in_address
-      expect(flash[:alert]).to eq("You are not authorized to access this page.")
-    end
   end
 
   describe "GET #fill_in_delivery" do
@@ -58,17 +44,6 @@ RSpec.describe Orders::CheckoutController, type: :controller do
     it "redirects to fill_in_address if billing_address or shipping_address is nil" do
       get :fill_in_delivery
       expect(response).to redirect_to fill_in_address_checkout_path
-    end
-    it "redirects to root path if price of current order is 0" do
-      allow(order_in_progress).to receive(:real_price).and_return 0
-      get :fill_in_delivery
-      expect(response).to redirect_to root_path
-    end
-
-    it "sends flash alert id price of current order is 0" do
-      allow(order_in_progress).to receive(:real_price).and_return 0
-      get :fill_in_delivery
-      expect(flash[:alert]).to eq("You are not authorized to access this page.")
     end
   end
 
@@ -92,17 +67,6 @@ RSpec.describe Orders::CheckoutController, type: :controller do
       allow(controller).to receive(:keys_redirect).and_return [:fill_in_delivery]
       get :fill_in_payment
       expect(response).to redirect_to fill_in_delivery_checkout_path
-    end
-    it "redirects to root path if price of current order is 0" do
-      allow(order_in_progress).to receive(:real_price).and_return 0
-      get :fill_in_payment
-      expect(response).to redirect_to root_path
-    end
-
-    it "sends flash alert id price of current order is 0" do
-      allow(order_in_progress).to receive(:real_price).and_return 0
-      get :fill_in_payment
-      expect(flash[:alert]).to eq("You are not authorized to access this page.")
     end
   end
 
@@ -133,20 +97,18 @@ RSpec.describe Orders::CheckoutController, type: :controller do
       get :confirm
       expect(response).to redirect_to fill_in_payment_checkout_path
     end
-    it "redirects to root path if price of current order is 0" do
-      allow(order_in_progress).to receive(:real_price).and_return 0
-      get :confirm
-      expect(response).to redirect_to root_path
-    end
-
-    it "sends flash alert id price of current order is 0" do
-      allow(order_in_progress).to receive(:real_price).and_return 0
-      get :confirm
-      expect(flash[:alert]).to eq("You are not authorized to access this page.")
-    end
   end
 
   describe "GET #complete" do
+
+    let(:ability) {Object.new}
+
+    before do
+      ability.extend(CanCan::Ability)
+      allow(controller).to receive(:current_ability).and_return(ability)
+      ability.can :manage, :all
+      sign_in authenticated_user
+    end
 
     context "cancan doesn't allow user :complete if order is not in state in_queue" do
       before do

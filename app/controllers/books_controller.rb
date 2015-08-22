@@ -8,8 +8,8 @@ class BooksController < ApplicationController
     if params[:category_id]
       @books = Book.where(category_id: params[:category_id]).page(params[:page])
       @current_category = current_category params[:category_id]
-    elsif params[:query]
-      @books = Book.search params[:query]
+    elsif params[:search]
+      @books = Book.search(params[:search]).page(params[:page])
     else
       @books = Book.all.page(params[:page])
     end

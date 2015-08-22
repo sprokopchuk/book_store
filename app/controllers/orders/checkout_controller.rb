@@ -8,16 +8,13 @@ class Orders::CheckoutController < ApplicationController
   before_action :set_credit_card, only: :fill_in_payment
 
   def fill_in_address
-    authorize! :fill_in_address, @current_order
     @billing_address ||= current_or_guest_user.build_billing_address
     @shipping_address ||= current_or_guest_user.build_shipping_address
-    @current_order.aasm.set_current_state_with_persistence :fill_in_a ddress
+    @current_order.aasm.set_current_state_with_persistence :fill_in_address
   end
 
   def fill_in_delivery
-    authorize! :fill_in_delivery, @current_order
-    keys = keys_redirect @current_order, :fill_in_delivery, 1
-    redirect_to :action => "#{keys[0]}", :controller => "orders/checkout" if keys.any?
+    redirect_to_checkout @billing_address, @shipping_address
     @current_order.aasm.set_current_state_with_persistence :fill_in_delivery
   end
 
@@ -28,17 +25,13 @@ class Orders::CheckoutController < ApplicationController
   end
 
   def fill_in_payment
-    authorize! :fill_in_payment, @current_order
-    keys = keys_redirect @current_order, :fill_in_payment, 2
-    redirect_to :action => "#{keys[0]}", :controller => "orders/checkout" if keys.any?
+    redirect_to_checkout @billing_address, @shipping_address, @current_order.delivery_id
     @credit_card ||= current_or_guest_user.build_credit_card
     @current_order.aasm.set_current_state_with_persistence :fill_in_payment
   end
 
   def confirm
-    authorize! :confirm, @current_order
-    keys = keys_redirect @current_order, :confirm, 3
-    redirect_to :action => "#{keys[0]}", :controller => "orders/checkout" if keys.any?
+    redirect_to_checkout @billing_address, @shipping_address, @current_order.delivery_id, @current_order.credit_card
     @current_order.aasm.set_current_state_with_persistence :confirm
   end
   def complete
@@ -48,18 +41,21 @@ class Orders::CheckoutController < ApplicationController
 
   private
 
-  def keys_redirect order, state, num
-    objs = {:fill_in_address => [order.user.billing_address, order.user.shipping_address],
-            :fill_in_delivery => [order.delivery_id],
-            :fill_in_payment => [order.credit_card]}
-    keys_redirect = []
-    objs.keys.take(num).each do |key|
-      case objs[key].length
-        when 2 then keys_redirect << key if objs[key][0].nil? || objs[key][1].nil?
-        when 1 then keys_redirect << key if objs[key][0].nil?
+  # redirect_to current_order, :billing_address, :shipping_address, :credit_card
+  def redirect_to_checkout current_order, *objs
+    objs_for_check = {}
+    current_user = current_order.user
+    objs.each { |obj| objs_for_check[obj] = current_user.send(obj)}
+=begin
+    objs.each do |obj|
+      if obj.nil?
+        redirect_to fill_in_address_checkout_path and return if objs[0].nil? || objs[0].nil?
+        redirect_to fill_in_delivery_path and return if objs[0].nil?
+        redirect_to fill_in_payment_path and return
+        redirect_to confirm_path and return if state != :confirm
       end
     end
-    keys_redirect
+=end
   end
 
   def set_current_order
