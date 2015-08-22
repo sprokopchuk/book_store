@@ -11,6 +11,9 @@
             %time.review-date
               %i.fa.fa-clock-o
               = rating.created_at.strftime("%b %d, %Y")
-          .review-text
+            .stars
+              - rating.rate.times do
+                %i.glyphicon.glyphicon-star.text-primary
+          .review-text1
             %p
               = rating.review

@@ -1,5 +1,6 @@
 .col-sm-8.col-md-9
   %h1= @book.title
+  %h6 by #{@book.author.full_name}
   = image_tag @book.image.thumb.url, class: "img-thumbnail img-responsive pull-left", size: "200x300"
   .col-sm-7.col-md-8
     %span.lead.text-danger.pull-left{:style => "font-size: 24px"}
