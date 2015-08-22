@@ -105,8 +105,6 @@ RSpec.describe Ability, type: :model do
     it {expect(subject).to be_able_to(:manage, Author)}
     it {expect(subject).to be_able_to(:manage, User)}
     it {expect(subject).to be_able_to(:manage, Delivery)}
-    it {expect(subject).not_to be_able_to(:manage, Address)}
-    it {expect(subject).not_to be_able_to(:manage, CreditCard)}
     context 'for orders' do
       let(:order) {FactoryGirl.create :order, user: admin}
       it {expect(subject).to be_able_to(:read, Order)}
