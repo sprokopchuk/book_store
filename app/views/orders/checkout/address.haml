@@ -8,9 +8,9 @@
               %b
                 = t("current_order.checkout")
           %ul.nav.nav-tabs
-            %li.active= link_to "Address", fill_in_address_checkout_path
-            %li.disabled= link_to "Delivery", fill_in_delivery_checkout_path
-            %li.disabled= link_to "Payment", fill_in_payment_checkout_path
+            %li.active= link_to "Address", address_checkout_path
+            %li.disabled= link_to "Delivery", delivery_checkout_path
+            %li.disabled= link_to "Payment", payment_checkout_path
             %li.disabled= link_to "Confirm", confirm_checkout_path
             %li.disabled= link_to "Complete", "#"
     .panel-body

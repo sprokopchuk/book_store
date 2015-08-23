@@ -1,7 +1,7 @@
 class Order < ActiveRecord::Base
 
   include AASM
-  scope :in_progress, -> {where state: ['in_progress', "fill_in_address", "fill_in_delivery", "fill_in_payment", "confirm"]}
+  scope :in_progress, -> {where state: ['in_progress', "address", "delivery", "payment", "confirm"]}
   belongs_to :user
   belongs_to :credit_card
   has_many :order_items
@@ -12,9 +12,9 @@ class Order < ActiveRecord::Base
 
   aasm :whiny_transitions => false, :column => 'state' do
     state :in_progress, :initial => true
-    state :fill_in_address
-    state :fill_in_delivery
-    state :fill_in_payment
+    state :address
+    state :delivery
+    state :payment
     state :confirm
     state :in_queue
     state :in_delivery
@@ -22,10 +22,10 @@ class Order < ActiveRecord::Base
     state :canceled
 
     event :next_step_checkout do
-      transitions :from => :in_progress, :to => :fill_in_address
-      transitions :from => :fill_in_address, :to => :fill_in_delivery
-      transitions :from => :fill_in_delivery, :to => :fill_in_payment
-      transitions :from => :fill_in_payment, :to => :confirm
+      transitions :from => :in_progress, :to => :address
+      transitions :from => :address, :to => :delivery
+      transitions :from => :delivery, :to => :payment
+      transitions :from => :payment, :to => :confirm
       transitions :from => :confirm, :to => :in_queue
     end
 

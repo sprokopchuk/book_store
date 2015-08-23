@@ -9,14 +9,11 @@ Rails.application.routes.draw do
     collection do
       put :update, to: "orders#update"
     end
-    member do
-      put 'change_state', to: 'orders#change_state', as: "change_state"
-    end
   end
   resource :checkout, controller: "orders/checkout", only: [:update], format: false do
-    get 'fill_in_address'
-    get 'fill_in_delivery'
-    get 'fill_in_payment'
+    get 'address'
+    get 'delivery'
+    get 'payment'
     get 'confirm'
     get 'complete/:id', to: 'orders/checkout#complete', as: :complete
   end
