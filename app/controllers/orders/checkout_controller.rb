@@ -2,7 +2,7 @@ class Orders::CheckoutController < ApplicationController
 
   before_action :authenticate_user!
   before_action :set_current_order, except: :complete
-  before_action :set_addresses, only: [:fill_in_address, :confirm]
+  before_action :set_addresses, only: [:fill_in_address, :confirm, :complete]
   before_action :set_default_delivery, only: :fill_in_delivery
   before_action :deliveries, only: :fill_in_delivery
   before_action :set_credit_card, only: :fill_in_payment

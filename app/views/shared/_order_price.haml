@@ -1,0 +1,27 @@
+%tr
+  %td
+  %td
+  %td.text-center
+    %h4= t("current_order.subtotal")
+  %td
+    %h4
+      %strong $#{order.real_price}
+- unless order.delivery.nil?
+  %tr
+    %td
+    %td
+    %td.text-center
+      %h4 Shipping:
+    %td
+      %h4
+        %strong
+          $#{order.delivery.price}
+  %tr
+    %td
+    %td
+    %td.text-center
+      %h4 Order total:
+    %td
+      %h4
+        %strong
+          $#{order.price_with_delivery}

@@ -23,7 +23,7 @@
           %address.col-xs-3
             %h4
               %b Billing Address
-              = link_to "(edit)", fill_in_address_checkout_path
+              = link_to "(edit)", address_checkout_path
             = current_or_guest_user.full_name
             %br
             = @billing_address.address
@@ -38,7 +38,7 @@
           %address.col-xs-3
             %h4
               %b Shipping Address
-              = link_to "(edit)", fill_in_address_checkout_path
+              = link_to "(edit)", address_checkout_path
             = current_or_guest_user.full_name
             %br
             = @shipping_address.address
@@ -53,12 +53,12 @@
           .col-xs-3
             %h4
               %b Shipments
-              = link_to "(edit)", fill_in_delivery_checkout_path
+              = link_to "(edit)", delivery_checkout_path
             = @current_order.delivery.name
           .col-xs-3
             %h4
               %b Payments Information
-              = link_to "(edit)", fill_in_payment_checkout_path
+              = link_to "(edit)", payment_checkout_path
             %br
             = current_or_guest_user.credit_card.number
             %br
@@ -78,46 +78,7 @@
                 %th
             %tbody
               - @current_order.order_items.each do |order_item|
-                %tr
-                  %td.col-sm-9.col-md-8
-                    .media
-                      = image_tag order_item.book.image.thumb.url, class: "media-object thumbnail pull-left", size: "90x120"
-                      .media-body
-                        %h4.media-heading= link_to order_item.book.title, book_path(order_item.book)
-                        %p= order_item.book.description.truncate(200, separator: ' ')
-                  %td.col-sm-1.col-md-1{:style => "text-align: center"}
-                    = order_item.quantity
-                  %td.col-sm-2.col-md-2.text-center
-                    %strong
-                      $#{order_item.book.price}
-                  %td.col-sm-2.col-md-2.text-center
-                    %strong
-                      $#{order_item.total_price}
-              %tr
-                %td
-                %td
-                %td.text-center
-                  %h4= t("current_order.subtotal")
-                %td
-                  %h4
-                    %strong $#{@current_order.real_price}
-              %tr
-                %td
-                %td
-                %td.text-center
-                  %h4 Shipping:
-                %td
-                  %h4
-                    %strong
-                      $#{@current_order.delivery.price}
-              %tr
-                %td
-                %td
-                %td.text-center
-                  %h4 Order total:
-                %td
-                  %h4
-                    %strong
-                      $#{@current_order.price_with_delivery}
+                = render partial: 'shared/order_item_list', locals: {order_item: order_item}
+              = render partial: 'shared/order_price', locals: {order: @current_order}
         .col-xs-3
           = f.button "Plce order", :name => "change_state", value: "in_queue", class: "btn btn-primary"

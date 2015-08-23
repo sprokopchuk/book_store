@@ -1,0 +1,33 @@
+.col-sm-12.col-md-10.col-md-offset-1
+  .panel.with-nav-tabs.panel-info
+    .panel-heading
+      .panel-title
+        .row
+          .col-xs-4
+            %h4
+              %b
+                Order #{@order.number}
+              %small= @order.state
+          .col-xs-6
+            = link_to t("current_order.back_to_orders"), orders_path, class: "btn btn-primary btn-block"
+    .panel-body
+      .col-xs-12
+        %table.table.table-hover
+          %thead
+            %tr
+              %th
+                = t("current_order.book")
+              %th
+                = t("current_order.quantity")
+              %th.text-center
+                = t("current_order.price")
+              %th.text-center
+                = t("current_order.total")
+              %th
+          %tbody
+            - @order.order_items.each do |order_item|
+              = render partial: 'shared/order_item_list', locals: {order_item: order_item}
+            = render partial: 'shared/order_price', locals: {order: @order}
+
+
+

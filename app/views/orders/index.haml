@@ -1,0 +1,96 @@
+.col-sm-12.col-md-10.col-md-offset-1
+  .panel.with-nav-tabs.panel-info
+    .panel-heading
+      .panel-title
+        .row
+          .col-xs-4
+            %h4
+              %b Orders
+    .panel-body
+      .col-xs-12
+        - if @current_order.order_items.any?
+          %table.table.table-hover
+            %thead
+              %tr
+                %th
+                  %h4
+                    %b In progress
+                %th
+                %th
+                %th
+            %tbody
+              %tr
+                %th
+                  = t("current_order.book")
+                %th
+                  = t("current_order.quantity")
+                %th.text-center
+                  = t("current_order.price")
+                %th.text-center
+                  = t("current_order.total")
+              - @current_order.order_items.each do |order_item|
+                = render partial: 'shared/order_item_list', locals: {order_item: order_item}
+              = render partial: 'shared/order_price', locals: {order: @current_order}
+              %tr
+                %th
+                  = link_to t("current_order.back_to_cart"), shopping_cart_path, class: "btn btn-primary btn-block"
+                %th
+                %th
+                %th
+      .col-xs-8
+        - if @orders.in_queue.any?
+          %h4{style: "border-bottom: 1px solid black"}
+            %b Waiting for processing
+          %table.table.table-hover
+            %thead
+              %tr
+                %th Number
+                %th Completed at
+                %th Total
+                %th
+            %tbody
+              - @orders.in_queue.each do |order|
+                %tr
+                  %th= order.number
+                  %th= order.completed_date
+                  %th $#{order.total_price}
+                  %th= link_to "view", order_path(order)
+        - if @orders.in_delivery.any?
+          %h4{style: "border-bottom: 1px solid black"}
+            %b In delivery
+          %table.table.table-hover
+            %thead
+              %tr
+                %th Number
+                %th Completed at
+                %th Total
+                %th
+            %tbody
+              - @orders.in_delivery.each do |order|
+                %tr
+                  %th= order.number
+                  %th= order.completed_date
+                  %th $#{order.total_price}
+                  %th= link_to "view", order_path(order)
+        - if @orders.delivered.any?
+          %h4{style: "border-bottom: 1px solid black"}
+            %b Delivered
+          %table.table.table-hover
+            %thead
+              %tr
+                %th Number
+                %th Completed at
+                %th Total
+                %th
+            %tbody
+              - @orders.delivered.each do |order|
+                %tr
+                  %th= order.number
+                  %th= order.completed_date
+                  %th $#{order.total_price}
+                  %th= link_to "view", order_path(order)
+
+
+
+
+

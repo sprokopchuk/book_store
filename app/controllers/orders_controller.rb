@@ -1,6 +1,6 @@
 class OrdersController < ApplicationController
 
-  before_action :set_current_order, only: [:edit, :update]
+  before_action :set_current_order, only: [:edit, :update, :index]
   load_and_authorize_resource
 
   def index

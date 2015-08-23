@@ -42,6 +42,10 @@ class Order < ActiveRecord::Base
 
   end
 
+  def number
+    "R" << self.id.to_s.rjust(9, '0')
+  end
+
   def add order_item
     item = OrderItem.find_by(book_id: order_item.book_id, order_id: self.id)
     if item.nil?

@@ -42,7 +42,7 @@
                 %td
                   = link_to t("current_order.empty_cart"), destroy_all_order_items_path, method: :post, class: "btn btn-danger btn-block"
                 %td
-                  = link_to t("current_order.checkout"), fill_in_address_checkout_path, class: "btn btn-success btn-block"
+                  = link_to t("current_order.checkout"), address_checkout_path, class: "btn btn-success btn-block"
                 %td
                   %b
                     = t("current_order.coupon_code")

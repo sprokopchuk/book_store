@@ -59,6 +59,9 @@ en:
     add_to_wishlist: "Add to wishes"
     categories: "Categories"
   current_order:
+    back_to_orders: "Back to orders"
+    back_to_store: "Back to store"
+    back_to_cart: "Go to cart"
     shopping_cart: "Shopping Cart"
     continue_shopping: "Continue shopping"
     book: "Book"
