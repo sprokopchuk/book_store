@@ -14,7 +14,7 @@ class Orders::CheckoutController < ApplicationController
   end
 
   def delivery
-    redirect_to_checkout(@current_order, :billing_address, :shipping_address)
+    return redirect_to_checkout(@current_order, :billing_address, :shipping_address)
     @current_order.aasm.set_current_state_with_persistence :delivery
   end
 
@@ -25,13 +25,13 @@ class Orders::CheckoutController < ApplicationController
   end
 
   def payment
-    redirect_to_checkout(@current_order, :billing_address, :shipping_address, :delivery)
+    return redirect_to_checkout(@current_order, :billing_address, :shipping_address, :delivery)
     @credit_card ||= current_or_guest_user.build_credit_card
     @current_order.aasm.set_current_state_with_persistence :payment
   end
 
   def confirm
-    redirect_to_checkout(@current_order, :billing_address, :shipping_address, :delivery, :credit_card)
+    return redirect_to_checkout(@current_order, :billing_address, :shipping_address, :delivery, :credit_card)
     @current_order.aasm.set_current_state_with_persistence :confirm
   end
   def complete
@@ -57,6 +57,7 @@ class Orders::CheckoutController < ApplicationController
 
   def set_current_order
     @current_order = current_or_guest_user.current_order_in_progress
+    redirect_to root_path, notice: t("current_order.no_items") unless @current_order.ready_to_checkout?
   end
 
   def set_addresses

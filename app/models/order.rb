@@ -28,22 +28,31 @@ class Order < ActiveRecord::Base
       transitions :from => :address, :to => :delivery
       transitions :from => :delivery, :to => :payment
       transitions :from => :payment, :to => :confirm
-      transitions :from => :confirm, :to => :in_queue
+      transitions :from => :confirm, :to => :in_queue, :after => [:set_total_price, :set_completed_date]
     end
 
     event :confirm do
-      transitions :from => :in_queue, :to => :in_delivery
+      transitions :from => :in_queue, :to => :in_delivery, :after => :set_completed_date
     end
 
     event :cancel do
       transitions :from => [:in_queue, :in_delivery], :to => :canceled
     end
     event :finish do
-      transitions :from => :in_delivery, :to => :delivered
+      transitions :from => :in_delivery, :to => :delivered, :after => :set_completed_date
     end
 
   end
 
+  def set_total_price
+    price_with_delivery
+    self.save
+  end
+
+  def set_completed_date
+    self.completed_date = DateTime.now
+    self.save
+  end
   def number
     "R" << self.id.to_s.rjust(9, '0')
   end
@@ -70,7 +79,7 @@ class Order < ActiveRecord::Base
     self.real_price > 0
   end
   def price_with_delivery
-    self.delivery.nil? ? real_price : real_price + delivery.price
+    self.delivery.nil? ? real_price : self.total_price = real_price + delivery.price
   end
 
   def merge other_order

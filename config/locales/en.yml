@@ -50,6 +50,7 @@ en:
   header:
     shop: "SHOP"
     cart: "CART"
+    home: "HOME"
   books:
     add_to_card: "Add to cart"
     out_in_stock: "Out in stock"
@@ -77,6 +78,7 @@ en:
     add_success: 'Cart was successfully updated.'
     in_queue: "Your order was successfully add in queue"
     add_fail: 'Something is went wrong.'
+    no_items: "Cart don't have any books"
   ratings:
     add_success: 'Review was successfully add in moderation.'
     add_fail: 'Review was not add.Something is wrong'

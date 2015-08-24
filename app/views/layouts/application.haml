@@ -12,10 +12,10 @@
           %span.navbar-brand The Book store
         #bs-example-navbar-collapse-1.collapse.navbar-collapse
           %ul.nav.navbar-nav
-            %li
-              %a{:href => "#"} HOME
             %li{:class => active_class(root_path)}
-              = link_to t("header.shop"), root_path
+              = link_to t("header.home"), root_path
+            %li{:class => active_class(books_path)}
+              = link_to t("header.shop"), books_path
             %li
               = form_tag books_path, method: :get, class: "navbar-form" do
                 .form-group

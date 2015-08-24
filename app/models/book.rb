@@ -16,6 +16,6 @@ class Book < ActiveRecord::Base
   end
 
   def self.best_sellers
-    #OrderItem.all
+    OrderItem.group(:book).sum(:quantity).sort_by{ |k, v| v }.reverse.to_h.keys[0,3]
   end
 end

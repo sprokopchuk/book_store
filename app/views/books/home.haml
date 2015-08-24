@@ -1,0 +1,30 @@
+#carousel-example-generic.carousel.slide{"data-ride" => "carousel"}
+  / Wrapper for slides
+  .carousel-inner{:role => "listbox"}
+    - @books.each do |book|
+      .item.thumbnail.col-md-8.col-md-offset-2{:class => ("active" if book == @books.first)}
+        .col-md-4.text-center.pull-left
+          = image_tag(book.image.thumb.url)
+          %h5
+            = link_to book.title, book_path(book)
+            .small
+              %b by #{book.author.full_name}
+          %b
+            $#{book.price}
+        .col-md-8.pull-rigth
+          %p= book.description.truncate(400, separator: ' ')
+          - if book.in_stock?
+            = form_for @order_item, html: {class: "form-inline" } do |f|
+              = f.number_field :quantity, {value: 1, min: 1, max: book.in_stock, class: "form-control"}
+              = f.hidden_field :book_id, :value => book.id
+              = f.hidden_field :price, :value => book.price
+              = f.submit t("books.add_to_card"), class: "btn btn-primary"
+          - else
+            %span.book.alert-danger= t("books.out_in_stock")
+  / Controls
+  %a.left.carousel-control{"data-slide" => "prev", :href => "#carousel-example-generic", :role => "button"}
+    %span.glyphicon.glyphicon-chevron-left{"aria-hidden" => "true"}
+    %span.sr-only Previous
+  %a.right.carousel-control{"data-slide" => "next", :href => "#carousel-example-generic", :role => "button"}
+    %span.glyphicon.glyphicon-chevron-right{"aria-hidden" => "true"}
+    %span.sr-only Next

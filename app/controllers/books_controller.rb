@@ -1,7 +1,7 @@
 class BooksController < ApplicationController
 
   before_action :categories, only: [:show, :index]
-  before_action :new_order_item, only: :show
+  before_action :new_order_item, only: [:show, :home]
   before_action :new_rating, only: :show
   before_action :set_wish_list, only: :show
 
@@ -14,6 +14,10 @@ class BooksController < ApplicationController
     else
       @books = Book.all.page(params[:page])
     end
+  end
+
+  def home
+    @books = Book.best_sellers
   end
 
   def show
