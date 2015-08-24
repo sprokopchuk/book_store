@@ -3,6 +3,13 @@ Rails.application.routes.draw do
   root 'books#index'
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   devise_for :users,  path: '', path_names: { sign_in: 'login', sign_out: 'logout', password: 'password', registration: 'settings', sign_up: 'register' }, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+
+  resources :users, only: :show do
+    resource :wish_list, only: :show do
+      post 'add_book/:book_id', to: 'wish_lists#add_book', as: 'add_book_to'
+      delete 'remove_book/:book_id', to: 'wish_lists#remove_book', as: 'remove_book_from'
+    end
+  end
   resources :ratings, only: :create
   resources :books, only: [:index, :show], format: false
   resources :orders, except: [:destroy, :edit, :update] do

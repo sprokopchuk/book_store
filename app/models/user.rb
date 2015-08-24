@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   has_many :orders, dependent: :destroy
   has_many :ratings
   has_one :credit_card
+  has_one :wish_list
   has_one :billing_address, class_name: "Address", foreign_key: "billing_address_id"
   has_one :shipping_address, class_name: "Address", foreign_key: "shipping_address_id"
   validates :first_name, :last_name, presence: true
@@ -15,6 +16,9 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :credit_card
   accepts_nested_attributes_for :orders
 
+  after_create do |user|
+    user.build_wish_list user: self
+  end
   def current_order_in_progress
     current_order = self.orders.in_progress.take
     current_order.nil? ? self.orders.create : current_order

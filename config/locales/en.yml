@@ -80,6 +80,10 @@ en:
   ratings:
     add_success: 'Review was successfully add in moderation.'
     add_fail: 'Review was not add.Something is wrong'
+  wish_list:
+    add_success: "Book was added to your wish list"
+    add_fail: 'Book was not add to wish list.Something is wrong'
+    remove_success: "Book was delete from your wish list"
   order_items:
     add_success: 'Book was successfully add to CART.'
     add_fail: 'Book was not add to CART.Something is wrong'
