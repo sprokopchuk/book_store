@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150823174958) do
+ActiveRecord::Schema.define(version: 20150824134632) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,15 +22,15 @@ ActiveRecord::Schema.define(version: 20150823174958) do
     t.string   "city"
     t.string   "phone"
     t.integer  "country_id"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
-    t.integer  "billing_address_id"
-    t.integer  "shipping_address_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.integer  "user_id"
+    t.boolean  "billing_address"
+    t.boolean  "shipping_address"
   end
 
-  add_index "addresses", ["billing_address_id"], name: "index_addresses_on_billing_address_id", using: :btree
   add_index "addresses", ["country_id"], name: "index_addresses_on_country_id", using: :btree
-  add_index "addresses", ["shipping_address_id"], name: "index_addresses_on_shipping_address_id", using: :btree
+  add_index "addresses", ["user_id"], name: "index_addresses_on_user_id", using: :btree
 
   create_table "authors", force: :cascade do |t|
     t.string   "first_name"

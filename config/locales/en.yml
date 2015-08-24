@@ -81,8 +81,11 @@ en:
     add_success: 'Review was successfully add in moderation.'
     add_fail: 'Review was not add.Something is wrong'
   wish_list:
+    link: "Wish List"
+    aleary_in_list: "In Wish List"
     add_success: "Book was added to your wish list"
     add_fail: 'Book was not add to wish list.Something is wrong'
+    remove_button: "Remove"
     remove_success: "Book was delete from your wish list"
   order_items:
     add_success: 'Book was successfully add to CART.'

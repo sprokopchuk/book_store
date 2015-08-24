@@ -3,6 +3,7 @@ class BooksController < ApplicationController
   before_action :categories, only: [:show, :index]
   before_action :new_order_item, only: :show
   before_action :new_rating, only: :show
+  before_action :set_wish_list, only: :show
 
   def index
     if params[:category_id]
@@ -20,6 +21,10 @@ class BooksController < ApplicationController
   end
 
   private
+
+    def set_wish_list
+      @wish_list = current_or_guest_user.wish_list
+    end
     def categories
       @categories = Category.all
     end

@@ -2,36 +2,36 @@ class Orders::CheckoutController < ApplicationController
 
   before_action :authenticate_user!
   before_action :set_current_order, except: :complete
-  before_action :set_addresses, only: [:fill_in_address, :confirm, :complete]
-  before_action :set_default_delivery, only: :fill_in_delivery
-  before_action :deliveries, only: :fill_in_delivery
-  before_action :set_credit_card, only: :fill_in_payment
+  before_action :set_addresses, only: [:address, :confirm, :complete]
+  before_action :set_default_delivery, only: :delivery
+  before_action :deliveries, only: :delivery
+  before_action :set_credit_card, only: :payment
 
-  def fill_in_address
+  def address
     @billing_address ||= current_or_guest_user.build_billing_address
     @shipping_address ||= current_or_guest_user.build_shipping_address
-    @current_order.aasm.set_current_state_with_persistence :fill_in_address
+    @current_order.aasm.set_current_state_with_persistence :address
   end
 
-  def fill_in_delivery
-    redirect_to_checkout @billing_address, @shipping_address
-    @current_order.aasm.set_current_state_with_persistence :fill_in_delivery
+  def delivery
+    redirect_to_checkout(@current_order, :billing_address, :shipping_address)
+    @current_order.aasm.set_current_state_with_persistence :delivery
   end
 
   def update
     if current_or_guest_user.update_without_password(user_params) && @current_order.next_step_checkout!
-      redirect_to :action => "#{@current_order.aasm.current_state.to_s}", :controller => "orders/checkout"
+      redirect_to :action => "#{@current_order.aasm.current_state.to_s}"
     end
   end
 
-  def fill_in_payment
-    redirect_to_checkout @billing_address, @shipping_address, @current_order.delivery_id
+  def payment
+    redirect_to_checkout(@current_order, :billing_address, :shipping_address, :delivery)
     @credit_card ||= current_or_guest_user.build_credit_card
-    @current_order.aasm.set_current_state_with_persistence :fill_in_payment
+    @current_order.aasm.set_current_state_with_persistence :payment
   end
 
   def confirm
-    redirect_to_checkout @billing_address, @shipping_address, @current_order.delivery_id, @current_order.credit_card
+    redirect_to_checkout(@current_order, :billing_address, :shipping_address, :delivery, :credit_card)
     @current_order.aasm.set_current_state_with_persistence :confirm
   end
   def complete
@@ -41,21 +41,18 @@ class Orders::CheckoutController < ApplicationController
 
   private
 
-  # redirect_to current_order, :billing_address, :shipping_address, :credit_card
   def redirect_to_checkout current_order, *objs
-    objs_for_check = {}
-    current_user = current_order.user
-    objs.each { |obj| objs_for_check[obj] = current_user.send(obj)}
-=begin
-    objs.each do |obj|
-      if obj.nil?
-        redirect_to fill_in_address_checkout_path and return if objs[0].nil? || objs[0].nil?
-        redirect_to fill_in_delivery_path and return if objs[0].nil?
-        redirect_to fill_in_payment_path and return
-        redirect_to confirm_path and return if state != :confirm
+    paths = { address: [:billing_address, :shipping_address],
+              delivery: [:delivery],
+              payment: [:credit_card]}
+    current_user = current_order
+    paths.each do |key, value|
+      value.each do |v|
+        if objs.include? v
+          redirect_to action: "#{key}" and return if current_order.send(:"#{v}").nil?
+        end
       end
     end
-=end
   end
 
   def set_current_order

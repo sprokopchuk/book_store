@@ -1,1 +1,14 @@
-Ничего
+.col-sm-8.col-md-9
+  %h1 Wish List
+  - @wish_list.books.each do |book|
+    .book.col-md-4.text-center
+      .thumbnail
+        = link_to book_path(book) do
+          = image_tag(book.image.thumb.url)
+        %h5= link_to book.title, book_path(book)
+        %b $#{book.price}
+        = form_for @wish_list, url: remove_book_from_user_wish_list_path(current_or_guest_user, book), method: :delete do |f|
+          = f.submit t("wish_list.remove_button"), class: "btn btn-default btn-xs margin-bottom"
+  = paginate @wish_list.books.page(params[:page])
+
+

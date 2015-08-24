@@ -6,6 +6,8 @@ class Order < ActiveRecord::Base
   belongs_to :credit_card
   has_many :order_items
   belongs_to :delivery
+  has_one :billing_address, -> { where(billing_address: true) }, class_name: "Address", through: :user
+  has_one :shipping_address, -> { where(shipping_address: true) }, class_name: "Address", through: :user
   validates :total_price, :state, presence: true
   validates :total_price, numericality: true
   accepts_nested_attributes_for :order_items, allow_destroy: true

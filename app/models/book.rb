@@ -14,4 +14,8 @@ class Book < ActiveRecord::Base
     query.downcase!
     joins(:author).where('lower(trim(authors.first_name) || \' \' || trim(authors.last_name)) LIKE :search OR lower(books.title) LIKE :search OR lower(authors.first_name) LIKE :search OR lower(authors.last_name) LIKE :search', search: "%#{query}%")
   end
+
+  def self.best_sellers
+    #OrderItem.all
+  end
 end

@@ -29,6 +29,8 @@
                 ($#{current_or_guest_user.current_order_in_progress.real_price})
             - if user_signed_in?
               %li= link_to t("settings.admin_panel"), rails_admin_path if current_user.admin?
+              %li{:class => active_class(user_wish_list_path(current_or_guest_user))}
+                = link_to t("wish_list.link"), user_wish_list_path(current_or_guest_user)
               %li{:class => active_class(edit_user_registration_path(current_user))}
                 = link_to t("settings.settings"), edit_user_registration_path(current_user)
               %li{:class => active_class(orders_path)}

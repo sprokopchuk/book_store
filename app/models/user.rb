@@ -8,8 +8,8 @@ class User < ActiveRecord::Base
   has_many :ratings
   has_one :credit_card
   has_one :wish_list
-  has_one :billing_address, class_name: "Address", foreign_key: "billing_address_id"
-  has_one :shipping_address, class_name: "Address", foreign_key: "shipping_address_id"
+  has_one :billing_address, -> { where(billing_address: true) }, class_name: "Address"
+  has_one :shipping_address, -> { where(shipping_address: true) }, class_name: "Address"
   validates :first_name, :last_name, presence: true
   accepts_nested_attributes_for :billing_address, :reject_if => :all_blank
   accepts_nested_attributes_for :shipping_address, :reject_if => :all_blank

@@ -16,7 +16,11 @@
       - else
         %span.book.alert-danger= t("books.out_in_stock")
       %br/
-      = button_to t("books.add_to_wishlist"), "#", class: "btn btn-default btn-xs pull-right margin-bottom"
+      - unless @wish_list.books.include? @book
+        = form_for @wish_list, html: {class: "form-inline"}, url: add_book_to_user_wish_list_path(current_or_guest_user, @book), method: :post do |f|
+          = f.submit t("books.add_to_wishlist"), class: "btn btn-default btn-xs pull-right margin-bottom"
+      - else
+        %span.book.alert-info.pull-right.margin-bottom= t("wish_list.aleary_in_list")
   %p.col-sm-7.col-md-8= @book.description
   .clearfix
   - if user_signed_in?
