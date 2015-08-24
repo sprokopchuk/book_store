@@ -68,6 +68,9 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def number
+    "R" << self.id.to_s.rjust(9, '0')
+  end
   def real_price
     self.total_price = 0
     self.order_items.find_each do |item|

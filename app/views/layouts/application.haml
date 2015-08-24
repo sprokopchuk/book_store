@@ -20,7 +20,7 @@
               = form_tag books_path, method: :get, class: "navbar-form" do
                 .form-group
                   = text_field_tag :search, params[:search], class: "form-control", placeholder: "Search"
-                = button_tag "Search", type: "submit",  class: "btn btn-default"
+                = submit_tag "Search", class: "btn btn-default"
           %ul.nav.navbar-nav.navbar-right
             %li{:class => active_class(shopping_cart_path(current_or_guest_user.current_order_in_progress))}
               = link_to shopping_cart_path(current_or_guest_user.current_order_in_progress) do
