@@ -8,13 +8,13 @@ class Orders::CheckoutController < ApplicationController
   before_action :set_credit_card, only: :payment
 
   def address
-    @billing_address ||= current_or_guest_user.build_billing_address
-    @shipping_address ||= current_or_guest_user.build_shipping_address
+    @billing_address ||= current_user.build_billing_address
+    @shipping_address ||= current_user.build_shipping_address
     @current_order.aasm.set_current_state_with_persistence :address
   end
 
   def delivery
-    return redirect_to_checkout(@current_order, :billing_address, :shipping_address)
+    redirect_to_checkout(@current_order, :billing_address, :shipping_address); return if performed?
     @current_order.aasm.set_current_state_with_persistence :delivery
   end
 
@@ -25,13 +25,13 @@ class Orders::CheckoutController < ApplicationController
   end
 
   def payment
-    return redirect_to_checkout(@current_order, :billing_address, :shipping_address, :delivery)
-    @credit_card ||= current_or_guest_user.build_credit_card
+    redirect_to_checkout(@current_order, :billing_address, :shipping_address, :delivery); return if performed?
+    @credit_card ||= current_user.build_credit_card
     @current_order.aasm.set_current_state_with_persistence :payment
   end
 
   def confirm
-    return redirect_to_checkout(@current_order, :billing_address, :shipping_address, :delivery, :credit_card)
+    redirect_to_checkout(@current_order, :billing_address, :shipping_address, :delivery, :credit_card); return if performed?
     @current_order.aasm.set_current_state_with_persistence :confirm
   end
   def complete
@@ -48,33 +48,32 @@ class Orders::CheckoutController < ApplicationController
     current_user = current_order
     paths.each do |key, value|
       value.each do |v|
-        if objs.include? v
-          redirect_to action: "#{key}" and return if current_order.send(:"#{v}").nil?
-        end
+        return redirect_to action: "#{key}" if objs.include?(v) && current_order.send(:"#{v}").nil?
       end
     end
   end
 
   def set_current_order
-    @current_order = current_or_guest_user.current_order_in_progress
+    @current_order = current_user.current_order_in_progress
     redirect_to root_path, notice: t("current_order.no_items") unless @current_order.ready_to_checkout?
   end
 
   def set_addresses
-    @billing_address = current_or_guest_user.billing_address
-    @shipping_address = current_or_guest_user.shipping_address
+    @billing_address = current_user.billing_address
+    @shipping_address = current_user.shipping_address
   end
 
   def set_default_delivery
-    @default_delivery = current_or_guest_user.current_order_in_progress.delivery
+    @default_delivery = current_user.current_order_in_progress.delivery
     @default_delivery ||= Delivery.first
   end
   def deliveries
     @deliveries = Delivery.all
   end
   def set_credit_card
-    @credit_card = current_or_guest_user.credit_card
+    @credit_card = current_user.credit_card
   end
+
   def user_params
     params.require(:user).permit(:billing_address_attributes => [:address, :city, :country_id, :zipcode, :phone, :id],
                                   :shipping_address_attributes => [:address, :city, :country_id, :zipcode, :phone, :id],

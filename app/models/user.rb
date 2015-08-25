@@ -17,7 +17,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :orders
 
   after_create do |user|
-    user.build_wish_list user: self
+    user.create_wish_list(user: self) unless user.guest?
   end
   def current_order_in_progress
     current_order = self.orders.in_progress.take

@@ -4,8 +4,8 @@ RSpec.describe CheckoutForm, type: :model do
   let(:order_in_progress) {FactoryGirl.create :order, user: authenticated_user}
   let(:authenticated_user) {FactoryGirl.create :user}
   let(:country) {FactoryGirl.create :country}
-  let(:billing_address) {FactoryGirl.create :address, country_id: country.id, billing_address_id: authenticated_user.id}
-  let(:shipping_address) {FactoryGirl.create :address, country_id: country.id, shipping_address_id: authenticated_user.id}
+  let(:billing_address) {FactoryGirl.create :address, country_id: country.id, billing_address: true, user_id: authenticated_user.id}
+  let(:shipping_address) {FactoryGirl.create :address, country_id: country.id, shipping_address: true, user_id: authenticated_user.id}
   let(:billing_address_attributes) {FactoryGirl.attributes_for :address, country_id: country.id}
   let(:shipping_address_attributes) {FactoryGirl.attributes_for :address, country_id: country.id}
   let(:checkout_form) {CheckoutForm.new current_order: order_in_progress}
@@ -28,7 +28,7 @@ RSpec.describe CheckoutForm, type: :model do
     end
     context "save" do
       before do
-        order_in_progress.aasm.current_state = :fill_in_address
+        order_in_progress.aasm.current_state = :address
       end
       it "with billing_address and shipping_address" do
         checkout_form.save_or_update billing_address: billing_address_attributes, shipping_address: shipping_address_attributes
@@ -59,7 +59,7 @@ RSpec.describe CheckoutForm, type: :model do
 
     context "update" do
       before do
-        order_in_progress.aasm.current_state = :fill_in_address
+        order_in_progress.aasm.current_state = :address
         checkout_form.save_or_update billing_address: billing_address_attributes, shipping_address: shipping_address_attributes
       end
 

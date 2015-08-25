@@ -81,18 +81,18 @@ RSpec.describe OrdersController, type: :controller do
         expect(response).to redirect_to(:back)
       end
 
-      it "redirects from fill_in_address to fill_in_delivery" do
+      it "redirects from address to delivery" do
         allow(order_in_progress).to receive(:next_step_checkout!).and_return true
-        allow(order_in_progress).to receive_message_chain(:aasm, :current_state).and_return :fill_in_delivery
+        allow(order_in_progress).to receive_message_chain(:aasm, :current_state).and_return :delivery
         put :update, checkout: true, order: order_params
-        expect(response).to redirect_to :action => "fill_in_delivery", :controller => "orders/checkout"
+        expect(response).to redirect_to :action => "delivery", :controller => "orders/checkout"
       end
 
-      it "redirects from fill_in_delivery to fill_in_payment" do
+      it "redirects from delivery to payment" do
         allow(order_in_progress).to receive(:next_step_checkout!).and_return true
-        allow(order_in_progress).to receive_message_chain(:aasm, :current_state).and_return :fill_in_payment
+        allow(order_in_progress).to receive_message_chain(:aasm, :current_state).and_return :payment
         put :update, checkout: true, order: order_params
-        expect(response).to redirect_to :action => "fill_in_payment", :controller => "orders/checkout"
+        expect(response).to redirect_to :action => "payment", :controller => "orders/checkout"
       end
 
       it "redirects from confirm to complete" do

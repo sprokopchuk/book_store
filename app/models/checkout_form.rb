@@ -12,11 +12,11 @@ class CheckoutForm
 
   def save_or_update options = {}
     case current_order.aasm.current_state
-      when :fill_in_address
+      when :address
         create_or_update_addresses options[:billing_address], options[:shipping_address], options[:use_shipping_as_billing_address]
-      when :fill_in_payment
+      when :payment
         create_or_update_credit_card options[:credit_card]
-      when :fill_in_delivery
+      when :delivery
         update_delivery delivery
     end
   end

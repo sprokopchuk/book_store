@@ -13,6 +13,7 @@ class Ability
       can :manage, User
       can :manage, Rating
       can :manage, Delivery
+      can :manage, WishList
     elsif user.guest?
       can [:create, :destroy, :destroy_all], OrderItem, :order_id => user.current_order_in_progress.id
       can :update, Order, :user_id => user.id

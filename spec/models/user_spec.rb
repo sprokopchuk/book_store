@@ -8,22 +8,13 @@ RSpec.describe User, type: :model do
   it {expect(subject).to have_many(:ratings)}
   it {expect(subject).to have_one(:credit_card)}
 
-  context "#new_order" do
-    it "create a new order for user" do
-      subject.new_order
-      expect(subject.orders).to have(1).items
-    end
-  end
-
   context "#current_order_in_progress" do
-    let(:book_ordered) {FactoryGirl.create :book}
+    let(:book_ordered) {FactoryGirl.create :order_item}
     it "return a current order in progress" do
-      subject.new_order
       expect(subject.current_order_in_progress.class).to be(Order)
     end
 
     it "able add book through the current order" do
-      subject.new_order
       subject.current_order_in_progress.add book_ordered
       expect(subject.current_order_in_progress.order_items).to have(1).items
     end
