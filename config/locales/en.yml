@@ -75,16 +75,23 @@ en:
     coupon_code: "Coupon code"
     update: "Update"
     remove: "Remove"
-    add_success: 'Cart was successfully updated.'
+    update_success: 'Cart was successfully updated.'
     in_queue: "Your order was successfully add in queue"
     add_fail: 'Something is went wrong.'
     no_items: "Cart don't have any books"
+  checkout_order:
+    save_and_continue: "Save and Continue"
+    address: "Address"
+    delivery: "Delivery"
+    payment: "Payment"
+    confirm: "Confirm"
+    complete: "Complete"
   ratings:
     add_success: 'Review was successfully add in moderation.'
     add_fail: 'Review was not add.Something is wrong'
   wish_list:
     link: "Wish List"
-    aleary_in_list: "In Wish List"
+    already_in_list: "In Wish List"
     add_success: "Book was added to your wish list"
     add_fail: 'Book was not add to wish list.Something is wrong'
     remove_button: "Remove"

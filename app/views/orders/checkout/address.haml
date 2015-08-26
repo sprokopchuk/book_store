@@ -8,11 +8,11 @@
               %b
                 = t("current_order.checkout")
           %ul.nav.nav-tabs
-            %li.active= link_to "Address", address_checkout_path
-            %li.disabled= link_to "Delivery", delivery_checkout_path
-            %li.disabled= link_to "Payment", payment_checkout_path
-            %li.disabled= link_to "Confirm", confirm_checkout_path
-            %li.disabled= link_to "Complete", "#"
+            %li.active= link_to t("checkout_order.address"), address_checkout_path
+            %li.disabled= link_to  t("checkout_order.delivery"), delivery_checkout_path
+            %li.disabled= link_to t("checkout_order.payment"), payment_checkout_path
+            %li.disabled= link_to t("checkout_order.confirm"), confirm_checkout_path
+            %li.disabled= link_to t("checkout_order.complete"), "#"
     .panel-body
       .col-xs-4.col-md-offset-1.pull-right
         %u
@@ -35,6 +35,6 @@
           = f.fields_for :shipping_address, @shipping_address do |address_form|
             = render partial: "shared/fields_address", locals: {address_form: address_form}
         .col-xs-4.col-md-offset-3
-          = f.button "Save and Continue", :name => "checkout", value: "address", class: "btn btn-primary"
+          = f.button t("checkout_order.save_and_continue"), :name => "checkout", value: "address", class: "btn btn-primary"
 
 

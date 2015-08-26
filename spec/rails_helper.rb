@@ -36,6 +36,7 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = false
   config.include AddressHelper
+  config.include CheckoutHelper
   config.include Devise::TestHelpers, :type => :controller
 
   # RSpec Rails can automatically mix in different behaviours to your tests

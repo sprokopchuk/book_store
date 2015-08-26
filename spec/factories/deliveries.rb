@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :delivery do
-    name "New post"
+    name {Faker::Lorem.sentence}
     price 15
   end
 
