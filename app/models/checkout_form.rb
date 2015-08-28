@@ -17,17 +17,17 @@ class CheckoutForm
       when :payment
         create_or_update_credit_card options[:credit_card]
       when :delivery
-        update_delivery delivery
+        update_delivery_order options[:delivery]
     end
   end
 
 private
 
   def default_billing_address
-    current_order.user.billing_address unless current_order.user.billing_address.nil?
+    current_order.billing_address unless current_order.billing_address.nil?
   end
   def default_shipping_address
-    current_order.user.shipping_address unless current_order.user.shipping_address.nil?
+    current_order.shipping_address unless current_order.shipping_address.nil?
   end
 
   def default_credit_card
@@ -37,36 +37,59 @@ private
   def default_delivery
     current_order.delivery unless current_order.delivery.nil?
   end
-  def create_or_update_addresses billing_address_attributes = {}, shipping_address_attributes = {}, use_shipping_as_billing_address = false
-    current_user = current_order.user
-    shipping_address_attributes = billing_address_attributes if use_shipping_as_billing_address
+
+  def create_or_update_addresses(billing_address_attrs = {},
+                                  shipping_address_attrs = {},
+                                  use_shipping_as_billing_address = false)
+    shipping_address_attrs = billing_address_attrs if use_shipping_as_billing_address
+    objs = {billing_address: billing_address_attrs,
+            shipping_address: shipping_address_attrs}
+    save_or_update_obj objs
+  end
+=begin
+
+  def create_or_update(billing_address_attrs = {},
+                        shipping_address_attrs = {},
+                        use_shipping_as_billing_address = false)
     if current_user.billing_address.nil? || current_user.shipping_address.nil?
-      billing_address = current_user.build_billing_address(billing_address_attributes)
-      shipping_address = current_user.build_shipping_address(shipping_address_attributes)
+    billing_address = current_user.build_billing_address(billing_address_attributes)
+    shipping_address = current_user.build_shipping_address(shipping_address_attributes)
       promote_errors(billing_address.errors) and return false unless billing_address.valid?
       promote_errors(shipping_address.errors) and return false unless shipping_address.valid?
       @shipping_address = shipping_address
       @billing_address = billing_address
       @shipping_address.save && @billing_address.save
     else
-      current_user.billing_address.update(billing_address_attributes) && current_user.shipping_address.update(shipping_address_attributes)
+      return current_user.billing_address.update(billing_address_attributes) && current_user.shipping_address.update(shipping_address_attributes)
     end
+
+  end
+=end
+  def create_or_update_credit_card credit_card_attrs = {}
+    objs = {credit_card: credit_card_attrs}
+    save_or_update_obj(objs) && current_order.update(credit_card_id: current_order.user.credit_card.id)
   end
 
-  def create_or_update_credit_card credit_card_attributes = {}
+  def update_delivery_order delivery_attrs = {}
+    @delivery = Delivery.find_by(id: delivery_attrs[:id])
+    current_order.update(delivery_id: delivery_attrs[:id]) unless @delivery.nil?
+  end
+
+
+  def save_or_update_obj objs = {}
     current_user = current_order.user
-    if current_order.user.credit_card.nil?
-      credit_card = current_user.create_credit_card(credit_card_attributes)
-      promote_errors(credit_card.errors) and return false unless credit_card.valid?
-      @credit_card = credit_card.save
-    else
-      @credit_card = current_user.credit_card.update(credit_card_attributes)
+    result = ""
+    objs.each do |k, v|
+      if current_user.instance_eval("#{k}.nil?")
+        obj = current_user.send(:"build_#{k}", v)
+        promote_errors(obj.errors) and return false unless obj.valid?
+        instance_variable_set("@#{k}", obj)
+        result &&= instance_eval("@#{k}.save")
+      else
+        result &&= current_user.instance_eval("#{k}.update(#{v})")
+      end
     end
-    current_order.update(credit_card_id: current_user.credit_card.id)
-  end
-
-  def update_delivery delivery = {}
-    current_order.update(delivery_id: delivery[:id])
+    result
   end
 
   def promote_errors(child_errors)

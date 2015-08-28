@@ -1,10 +1,10 @@
 module AddressHelper
   def fill_in_address(address, type, country = false)
-    fill_in "user[#{type}_address_attributes][address]", with: address.address
-    fill_in "user[#{type}_address_attributes][city]", with: address.city
-    find(:select, "user_#{type}_address_attributes_country_id").find("option[value='#{address.send(:country_id)}']").select_option unless country
-    fill_in "user[#{type}_address_attributes][zipcode]", with: address.zipcode
-    fill_in "user[#{type}_address_attributes][phone]", with: address.phone
+    fill_in "user[#{type}_address_attributes][address]", with: address[:address]
+    fill_in "user[#{type}_address_attributes][city]", with: address[:city]
+    find(:select, "user_#{type}_address_attributes_country_id").find("option[value='#{address[:country_id]}']").select_option unless country
+    fill_in "user[#{type}_address_attributes][zipcode]", with: address[:zipcode]
+    fill_in "user[#{type}_address_attributes][phone]", with: address[:phone]
   end
 
   def check_fields_address(address, type)
