@@ -14,7 +14,7 @@
             %li.active= link_to t("checkout_order.confirm"), confirm_checkout_path
             %li.disabled= link_to t("checkout_order.complete"), "#"
     .panel-body
-      = form_for @current_order, url: orders_path, method: :put do |f|
+      = form_for @checkout_form, url: checkout_path, method: :put do |f|
         = f.hidden_field :change_state, value: "in_queue"
         .col-xs-12
           %u
@@ -26,43 +26,43 @@
               = link_to "(edit)", address_checkout_path
             = current_or_guest_user.full_name
             %br
-            = @billing_address.address
+            = @checkout_form.billing_address.address
             %br
-            = @billing_address.city
-            = @billing_address.zipcode
+            = @checkout_form.billing_address.city
+            = @checkout_form.billing_address.zipcode
             %br
-            = @billing_address.country.name
+            = @checkout_form.billing_address.country.name
             %br
             Phone
-            %abbr{title: "Phone"}= @billing_address.phone
+            %abbr{title: "Phone"}= @checkout_form.billing_address.phone
           %address.col-xs-3
             %h4
               %b Shipping Address
               = link_to "(edit)", address_checkout_path
             = current_or_guest_user.full_name
             %br
-            = @shipping_address.address
+            = @checkout_form.shipping_address.address
             %br
-            = @shipping_address.city
-            = @shipping_address.zipcode
+            = @checkout_form.shipping_address.city
+            = @checkout_form.shipping_address.zipcode
             %br
-            = @shipping_address.country.name
+            = @checkout_form.shipping_address.country.name
             %br
             Phone
-            %abbr{title: "Phone"}= @shipping_address.phone
+            %abbr{title: "Phone"}= @checkout_form.shipping_address.phone
           .col-xs-3
             %h4
               %b Shipments
               = link_to "(edit)", delivery_checkout_path
-            = @current_order.delivery.name
+            = @checkout_form.current_order.delivery.name
           .col-xs-3
             %h4
               %b Payments Information
               = link_to "(edit)", payment_checkout_path
             %br
-            = current_or_guest_user.credit_card.number
+            = @checkout_form.credit_card.number
             %br
-            #{current_or_guest_user.credit_card.exp_month}/#{current_or_guest_user.credit_card.exp_year}
+            #{@checkout_form.credit_card.exp_month}/#{@checkout_form.credit_card.exp_year}
         .col-xs-12
           %table.table.table-hover
             %thead
@@ -77,8 +77,8 @@
                   = t("current_order.total")
                 %th
             %tbody
-              - @current_order.order_items.each do |order_item|
+              - @checkout_form.current_order.order_items.each do |order_item|
                 = render partial: 'shared/order_item_list', locals: {order_item: order_item}
-              = render partial: 'shared/order_price', locals: {order: @current_order}
+              = render partial: 'shared/order_price', locals: {order: @checkout_form.current_order}
         .col-xs-3
           = f.button "Plce order", :name => "change_state", value: "in_queue", class: "btn btn-primary"
