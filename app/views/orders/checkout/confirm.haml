@@ -81,4 +81,4 @@
                 = render partial: 'shared/order_item_list', locals: {order_item: order_item}
               = render partial: 'shared/order_price', locals: {order: @checkout_form.current_order}
         .col-xs-3
-          = f.button "Plce order", :name => "change_state", value: "in_queue", class: "btn btn-primary"
+          = f.button t("current_order.place_order"), :name => "change_state", value: "in_queue", class: "btn btn-primary"
