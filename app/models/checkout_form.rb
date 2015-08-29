@@ -24,14 +24,14 @@ class CheckoutForm
 private
 
   def default_billing_address
-    current_order.billing_address unless current_order.billing_address.nil?
+    current_order.billing_address.nil? ? current_order.user.build_billing_address : current_order.billing_address
   end
   def default_shipping_address
-    current_order.shipping_address unless current_order.shipping_address.nil?
+    current_order.shipping_address.nil? ? current_order.user.build_shipping_address : current_order.shipping_address
   end
 
   def default_credit_card
-    current_order.user.credit_card unless current_order.user.credit_card.nil?
+    current_order.user.credit_card.nil? ? current_order.user.build_credit_card : current_order.user.credit_card
   end
 
   def default_delivery
