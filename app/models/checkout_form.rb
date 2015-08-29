@@ -82,7 +82,7 @@ private
     objs.each do |k, v|
       if current_user.instance_eval("#{k}.nil?")
         obj = current_user.send(:"build_#{k}", v)
-        promote_errors(obj.errors) and return false unless obj.valid?
+        promote_errors(obj.errors, k) and return false unless obj.valid?
         instance_variable_set("@#{k}", obj)
         result &&= instance_eval("@#{k}.save")
       else
@@ -92,9 +92,9 @@ private
     result
   end
 
-  def promote_errors(child_errors)
+  def promote_errors(child_errors, obj)
     child_errors.each do |attribute, message|
-      errors.add(attribute, message)
+      errors["#{obj}.#{attribute}"] = message
     end
   end
 end

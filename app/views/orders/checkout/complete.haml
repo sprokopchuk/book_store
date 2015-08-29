@@ -16,29 +16,29 @@
             %b Billing Address
           = current_or_guest_user.full_name
           %br
-          = @billing_address.address
+          = @order.billing_address.address
           %br
-          = @billing_address.city
-          = @billing_address.zipcode
+          = @order.billing_address.city
+          = @order.billing_address.zipcode
           %br
-          = @billing_address.country.name
+          = @order.billing_address.country.name
           %br
           Phone
-          %abbr{title: "Phone"}= @billing_address.phone
+          %abbr{title: "Phone"}= @order.billing_address.phone
         %address.col-xs-3
           %h4
             %b Shipping Address
           = current_or_guest_user.full_name
           %br
-          = @shipping_address.address
+          = @order.shipping_address.address
           %br
-          = @shipping_address.city
-          = @shipping_address.zipcode
+          = @order.shipping_address.city
+          = @order.shipping_address.zipcode
           %br
-          = @shipping_address.country.name
+          = @order.shipping_address.country.name
           %br
           Phone
-          %abbr{title: "Phone"}= @shipping_address.phone
+          %abbr{title: "Phone"}= @order.shipping_address.phone
         .col-xs-3
           %h4
             %b Shipments
@@ -46,9 +46,9 @@
         .col-xs-3
           %h4
             %b Payments Information
-          = current_or_guest_user.credit_card.number
+          = @order.credit_card.number
           %br
-          #{current_or_guest_user.credit_card.exp_month}/#{current_or_guest_user.credit_card.exp_year}
+          #{@order.credit_card.exp_month}/#{@order.credit_card.exp_year}
       .col-xs-12
         %table.table.table-hover
           %thead

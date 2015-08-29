@@ -18,22 +18,20 @@
         %u
           %h3 Order Summary
         %b Item total:
-        $#{@current_order.real_price}
+        $#{@checkout_form.current_order.real_price}
         %br
         %b Shipping:
-        $#{@current_order.delivery.price}
+        $#{@checkout_form.current_order.delivery.price}
         %br
         %b Order total:
-        $#{@current_order.price_with_delivery}
-      = form_for current_or_guest_user,  url: checkout_path do |f|
-        = devise_error_messages!
+        $#{@checkout_form.current_order.price_with_delivery}
+      = form_for @checkout_form,  url: checkout_path, method: :put do |f|
+        = render partial: "shared/error_messages", locals: {object: @checkout_form}
         .col-xs-4
           %u
             %h3 Payment:
           %br
-          = f.fields_for :orders, @current_order do |order|
-            = order.hidden_field :credit_card_id, value: current_or_guest_user.credit_card.id
-          = f.fields_for :credit_card, @credit_card do |card|
+          = f.fields_for :credit_card, @checkout_form.credit_card do |card|
             .col-xs-12
               %h4
                 %label.control-label Card Holder's Name

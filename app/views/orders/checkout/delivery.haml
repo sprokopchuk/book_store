@@ -18,18 +18,20 @@
         %u
           %h3 Order Summary
         %b Item total:
-        $#{@current_order.real_price}
+        $#{@checkout_form.current_order.real_price}
         %br
         %b Order total:
-        $#{@current_order.price_with_delivery}
-      = form_for @current_order, url: orders_path, method: :put  do |f|
+        $#{@checkout_form.current_order.price_with_delivery}
+      = form_for @checkout_form, url: checkout_path, method: :put  do |f|
+        = render partial: "shared/error_messages", locals: {object: @checkout_form}
         .col-xs-3
           %u
             %h3 Delivery:
             %br
           - @deliveries.each do |delivery|
             %label
-              = f.radio_button(:delivery_id, delivery.id, checked: delivery.id == @default_delivery.id)
+              = f.fields_for :delivery, @checkout_form.delivery do |delivery_form|
+                = delivery_form.radio_button(:id, delivery.id, checked: delivery.id == (@default_delivery.id))
               = delivery.name
               +$#{delivery.price}
             %br
