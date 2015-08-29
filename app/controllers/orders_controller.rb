@@ -15,15 +15,8 @@ class OrdersController < ApplicationController
   end
 
   def update
-    if params[:shopping_cart] && @current_order.update(order_params)
+    if @current_order.update(order_params)
       redirect_to :back, notice: t("current_order.update_success")
-    elsif params[:checkout] && @current_order.update(order_params)
-      @current_order.next_step_checkout!
-      redirect_to :action => "#{@current_order.aasm.current_state.to_s}", :controller => "orders/checkout"
-    elsif params[:change_state] && @current_order.aasm.current_state == :confirm
-      order_id = @current_order.id
-      @current_order.next_step_checkout!
-      redirect_to complete_checkout_path(order_id), notice: t("current_order.in_queue")
     else
       redirect_to :back, notice: t("current_order.add_fail")
     end

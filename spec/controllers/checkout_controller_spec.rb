@@ -131,9 +131,6 @@ RSpec.describe Orders::CheckoutController, type: :controller do
         expect(flash[:alert]).to eq("You are not authorized to access this page.")
       end
     end
-
-
-
   end
 
 end
