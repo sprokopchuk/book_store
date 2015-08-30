@@ -25,40 +25,41 @@
         %br
         %b Order total:
         $#{@checkout_form.current_order.price_with_delivery}
-      = form_for @checkout_form,  url: checkout_path, method: :put do |f|
-        = render partial: "shared/error_messages", locals: {object: @checkout_form}
-        .col-xs-4
-          %u
-            %h3 Payment:
-          %br
-          = f.fields_for :credit_card, @checkout_form.credit_card do |card|
-            .col-xs-12
-              %h4
-                %label.control-label Card Holder's Name
-            .col-xs-6.col-md-6
-              .form-group
-                = card.text_field :first_name,  class: "form-control", placeholder: "First name"
-            .col-xs-6.col-md-6.pull-right
-              .form-group
-                = card.text_field :last_name,  class: "form-control", placeholder: "Last name"
-            .col-xs-12.form-group
-              .input-group
-                = card.text_field :number, class: "form-control", placeholder: "Card Number", autocomplete: "cc-number"
-                %span.input-group-addon
-                  %span.fa.fa-credit-card
-            .col-xs-12
-              %h4
-                %label Card Expiry Date
-            .col-xs-6.col-md-6
-              .form-group
-                = card.number_field :exp_month, min: 1, max: 12, class: "form-control", placeholder: "MM"
-            .col-xs-6.col-md-6
-              .form-group
-                = card.number_field :exp_year, min: Time.now.year, class: "form-control", placeholder: "YY"
-            .col-xs-6
-              %label CVV code
-              .form-group
-                = card.text_field :cvv, class: "form-control", placeholder: "cvv"
-          .col-xs-6.col-md-offset-1
-            = f.button t("checkout_order.save_and_continue"), :name => "checkout", value: "payment", class: "btn btn-primary"
+      .col-xs-7
+        = form_for @checkout_form,  url: checkout_path, method: :put do |f|
+          = render partial: "shared/error_messages", locals: {object: @checkout_form}
+          .col-xs-7
+            %u
+              %h3 Payment:
+            %br
+            = f.fields_for :credit_card, @checkout_form.credit_card do |card|
+              .col-xs-12
+                %h4
+                  %label.control-label Card Holder's Name
+              .col-xs-6.col-md-6
+                .form-group
+                  = card.text_field :first_name,  class: "form-control", placeholder: "First name"
+              .col-xs-6.col-md-6.pull-right
+                .form-group
+                  = card.text_field :last_name,  class: "form-control", placeholder: "Last name"
+              .col-xs-12.form-group
+                .input-group
+                  = card.text_field :number, class: "form-control", placeholder: "Card Number", autocomplete: "cc-number"
+                  %span.input-group-addon
+                    %span.fa.fa-credit-card
+              .col-xs-12
+                %h4
+                  %label Card Expiry Date
+              .col-xs-6.col-md-6
+                .form-group
+                  = card.number_field :exp_month, min: 1, max: 12, class: "form-control", placeholder: "MM"
+              .col-xs-6.col-md-6
+                .form-group
+                  = card.number_field :exp_year, min: Time.now.year, class: "form-control", placeholder: "YY"
+              .col-xs-6
+                %label CVV code
+                .form-group
+                  = card.text_field :cvv, class: "form-control", placeholder: "cvv"
+            .col-xs-6.col-md-offset-1
+              = f.button t("checkout_order.save_and_continue"), :name => "checkout", value: "payment", class: "btn btn-primary"
 

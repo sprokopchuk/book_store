@@ -29,11 +29,6 @@ RSpec.describe CheckoutForm, type: :model do
 
     end
     context "save" do
-      it "with billing_address and shipping_address" do
-        checkout_form.save_or_update billing_address: billing_address_attributes, shipping_address: shipping_address_attributes
-        expect(checkout_form.billing_address).not_to be_nil
-        expect(checkout_form.shipping_address).not_to be_nil
-      end
 
       it "return true with billing_address and shipping_address" do
         expect(checkout_form.save_or_update billing_address: billing_address_attributes, shipping_address: shipping_address_attributes).to be_truthy
@@ -42,41 +37,28 @@ RSpec.describe CheckoutForm, type: :model do
       it "return false with invalid billing_address attributes" do
         billing_address_attributes[:country_id] = nil
         expect(checkout_form.save_or_update billing_address: billing_address_attributes, shipping_address: shipping_address_attributes).to be_falsey
-        expect(checkout_form.billing_address).to be_nil
       end
       it "return false with invalid shipping_address attributes" do
         shipping_address_attributes[:country_id] = nil
         expect(checkout_form.save_or_update billing_address: billing_address_attributes, shipping_address: shipping_address_attributes).to be_falsey
-        expect(checkout_form.shipping_address).to be_nil
       end
-      it "with option use_shipping_as_billing_address" do
-        checkout_form.save_or_update billing_address: billing_address_attributes, shipping_address: shipping_address_attributes, use_shipping_as_billing_address: true
-        expect(checkout_form.billing_address).not_to be_nil
-        expect(checkout_form.shipping_address).not_to be_nil
+      it "return true with option use_billing_as_shipping_address" do
+        expect(checkout_form.save_or_update billing_address: billing_address_attributes, use_billing_as_shipping_address = "yes")
       end
     end
 
     context "update" do
-      before do
-        checkout_form.save_or_update billing_address: billing_address_attributes, shipping_address: shipping_address_attributes
-       end
 
-      it "with valid billing_address attributes and shipping_address attributes" do
-        checkout_form.save_or_update billing_address: billing_address_attributes, shipping_address: shipping_address_attributes
-        expect(checkout_form.billing_address).not_to be_nil
-        expect(checkout_form.shipping_address).not_to be_nil
-      end
-
-      it "with valid billing_address attributes and shipping_address attributes return true" do
+      it "return true with valid billing_address attributes and shipping_address attributes" do
         expect(checkout_form.save_or_update billing_address: billing_address_attributes, shipping_address: shipping_address_attributes).to be_truthy
       end
 
-      it "with invalid billing_address attributes return false" do
+      it "return false with invalid billing_address attributes" do
         billing_address_attributes[:country_id] = nil
         expect(checkout_form.save_or_update billing_address: billing_address_attributes, shipping_address: shipping_address_attributes).to be_falsey
       end
 
-      it "with invalid shipping_address attributes return false" do
+      it "return false with invalid shipping_address attributes" do
         shipping_address_attributes[:country_id] = nil
         expect(checkout_form.save_or_update billing_address: billing_address_attributes, shipping_address: shipping_address_attributes).to be_falsey
       end
@@ -111,19 +93,14 @@ RSpec.describe CheckoutForm, type: :model do
     end
 
     context "save" do
-      it "with valid credit card attributes" do
-        checkout_form.save_or_update credit_card: credit_card_attrs
-        expect(checkout_form.credit_card).not_to be_nil
-      end
 
-      it "with valid credit card attributes return true" do
+      it "return true with valid credit card attributes" do
         expect(checkout_form.save_or_update credit_card: credit_card_attrs).to be_truthy
       end
 
-      it "with invalid credit card attributes return false" do
+      it "return false with invalid credit card attributes" do
         credit_card_attrs[:number] = ""
         expect(checkout_form.save_or_update credit_card: credit_card_attrs).to be_falsey
-        expect(checkout_form.credit_card).to be_nil
       end
 
       it "aasigns credit_card for current order" do
@@ -136,10 +113,6 @@ RSpec.describe CheckoutForm, type: :model do
 
       before do
         FactoryGirl.create :credit_card, user_id: authenticated_user.id
-      end
-      it "with valid credit card attributes" do
-        checkout_form.save_or_update credit_card: credit_card_attrs
-        expect(checkout_form.credit_card).not_to be_nil
       end
 
       it "return true with valid credit card attributes" do

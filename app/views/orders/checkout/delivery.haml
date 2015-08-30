@@ -22,17 +22,18 @@
         %br
         %b Order total:
         $#{@checkout_form.current_order.price_with_delivery}
-      = form_for @checkout_form, url: checkout_path, method: :put  do |f|
-        = render partial: "shared/error_messages", locals: {object: @checkout_form}
-        .col-xs-3
-          %u
-            %h3 Delivery:
-            %br
-          - @deliveries.each do |delivery|
-            %label
-              = f.fields_for :delivery, @checkout_form.delivery do |delivery_form|
-                = delivery_form.radio_button(:id, delivery.id, checked: delivery.id == (@default_delivery.id))
-              = delivery.name
-              +$#{delivery.price}
-            %br
-          = f.button "Save and Continue", :name => "checkout", value: "delivery", class: "btn btn-primary"
+      .col-xs-7
+        = form_for @checkout_form, url: checkout_path, method: :put  do |f|
+          = render partial: "shared/error_messages", locals: {object: @checkout_form}
+          .col-xs-5
+            %u
+              %h3 Delivery:
+              %br
+            - @deliveries.each do |delivery|
+              %label
+                = f.fields_for :delivery, @checkout_form.delivery do |delivery_form|
+                  = delivery_form.radio_button(:id, delivery.id, checked: delivery.id == (@default_delivery.id))
+                = delivery.name
+                +$#{delivery.price}
+              %br
+            = f.button "Save and Continue", :name => "checkout", value: "delivery", class: "btn btn-primary"

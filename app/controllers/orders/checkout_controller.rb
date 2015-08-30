@@ -70,8 +70,9 @@ class Orders::CheckoutController < ApplicationController
   end
 
   def checkout_form_params
-    params.require(:checkout_form).permit(:billing_address => [:address, :city, :country_id, :zipcode, :phone, :id],
-                                          :shipping_address => [:address, :city, :country_id, :zipcode, :phone, :id],
+    params.require(:checkout_form).permit(:use_billing_as_shipping_address,
+                                          :billing_address => [:address, :city, :country_id, :zipcode, :phone, :id],
+                                          :shipping_address => [:address, :city, :country_id, :zipcode, :phone, :id, :use_billing_address],
                                           :credit_card =>[:number, :cvv, :exp_month, :exp_year, :first_name, :last_name, :id],
                                           :delivery => [:id])
   end
