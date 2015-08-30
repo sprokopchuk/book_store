@@ -43,7 +43,7 @@ RSpec.describe CheckoutForm, type: :model do
         expect(checkout_form.save_or_update billing_address: billing_address_attributes, shipping_address: shipping_address_attributes).to be_falsey
       end
       it "return true with option use_billing_as_shipping_address" do
-        expect(checkout_form.save_or_update billing_address: billing_address_attributes, use_billing_as_shipping_address = "yes")
+        expect(checkout_form.save_or_update billing_address: billing_address_attributes, use_billing_as_shipping_address: "yes")
       end
     end
 

@@ -44,8 +44,6 @@
                 %td
                   = link_to t("current_order.checkout"), address_checkout_path, class: "btn btn-success btn-block"
                 %td
-                  %b
-                    = t("current_order.coupon_code")
                 %td= f.button t("current_order.update"), name: "shopping_cart", value: true, class: "btn btn-primary"
     - else
       .panel-footer

@@ -11,7 +11,7 @@ class Orders::CheckoutController < ApplicationController
   end
 
   def delivery
-    redirect_to_checkout(@checkout_form, :billing_address, :shipping_address); return if performed?
+    redirect_to_checkout(@checkout_form, :billing_address, :shipping_address)
   end
 
   def update
@@ -29,11 +29,11 @@ class Orders::CheckoutController < ApplicationController
   end
 
   def payment
-    redirect_to_checkout(@checkout_form, :billing_address, :shipping_address, :delivery); return if performed?
+    redirect_to_checkout(@checkout_form, :billing_address, :shipping_address, :delivery)
   end
 
   def confirm
-    redirect_to_checkout(@checkout_form, :billing_address, :shipping_address, :delivery, :credit_card); return if performed?
+    redirect_to_checkout(@checkout_form, :billing_address, :shipping_address, :delivery, :credit_card)
   end
   def complete
     @order = Order.find(params[:id])
