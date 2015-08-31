@@ -16,14 +16,14 @@ class Orders::CheckoutController < ApplicationController
 
   def update
     if @checkout_form.save_or_update(checkout_form_params)
-      @checkout_form.current_order.next_step_checkout!
-      redirect_to :action => "#{@checkout_form.current_order.aasm.current_state.to_s}"
-    elsif params[:change_state] && @checkout_form.current_order.aasm.current_state == :confirm
+      @checkout_form.next_step!
+      redirect_to :action => "#{@checkout_form.current_state.to_s}"
+    elsif params[:change_state] && @checkout_form.current_state == :confirm
       order_id = @checkout_form.current_order.id
-      @checkout_form.current_order.next_step_checkout!
+      @checkout_form.next_step!
       redirect_to complete_checkout_path(order_id), notice: t("current_order.in_queue")
     else
-      render "#{@checkout_form.current_order.aasm.current_state.to_s}"
+      render "#{@checkout_form.current_state.to_s}"
     end
 
   end
@@ -57,7 +57,7 @@ class Orders::CheckoutController < ApplicationController
   def set_data action_name
     @checkout_form = CheckoutForm.new current_order: current_user.current_order_in_progress
     redirect_to root_path, notice: t("current_order.no_items") unless @checkout_form.current_order.ready_to_checkout?; return if performed?
-    @checkout_form.current_order.aasm.set_current_state_with_persistence :"#{action_name}"
+    @checkout_form.set_current_state :"#{action_name}"
   end
 
   def set_default_delivery

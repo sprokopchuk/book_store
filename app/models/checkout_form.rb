@@ -12,7 +12,7 @@ class CheckoutForm
   attribute :use_billing_as_shipping_address, Hash
 
   def save_or_update options = {}
-    case current_order.aasm.current_state
+    case current_state
       when :address
         create_or_update_addresses options[:billing_address], options[:shipping_address], options[:use_billing_as_shipping_address]
       when :payment
@@ -20,6 +20,18 @@ class CheckoutForm
       when :delivery
         update_delivery_order options[:delivery]
     end
+  end
+
+  def current_state
+    current_order.aasm.current_state
+  end
+
+  def set_current_state state
+    current_order.aasm.set_current_state_with_persistence state
+  end
+
+  def next_step!
+    current_order.next_step_checkout!
   end
 
 private
@@ -57,7 +69,6 @@ private
     @delivery = Delivery.find_by(id: delivery_attrs[:id])
     current_order.update(delivery_id: delivery_attrs[:id]) unless @delivery.nil?
   end
-
 
   def save_or_update_obj objs = {}
     current_user = current_order.user
