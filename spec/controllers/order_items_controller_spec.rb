@@ -10,12 +10,15 @@ RSpec.describe OrderItemsController, type: :controller do
     request.env["HTTP_REFERER"] = "localhost:3000/where_i_came_from"
     allow(controller).to receive(:current_ability).and_return(ability)
     allow(controller).to receive(:current_or_guest_user).and_return authenticated_user
+    ability.can :manage, :all
   end
   describe 'POST #create' do
+    before do
+      allow(OrderItem).to receive(:new).and_return order_item
+      allow(order_item).to receive(:==).and_return true
+    end
     context "with valid attributes" do
       before do
-        allow(OrderItem).to receive(:new).and_return order_item
-        allow(order_item).to receive(:==).and_return true
         allow(authenticated_user).to receive_message_chain(:current_order_in_progress, :add).and_return true
       end
 
@@ -29,10 +32,6 @@ RSpec.describe OrderItemsController, type: :controller do
         post :create, order_item: order_item_params
       end
 
-      it "receives new for @order_item" do
-        expect(OrderItem).to receive(:new).with(order_item_params)
-        post :create, order_item: order_item_params
-      end
       it "sends success notice" do
         post :create, order_item: order_item_params
         expect(flash[:notice]).to eq I18n.t("order_items.add_success")
@@ -45,8 +44,6 @@ RSpec.describe OrderItemsController, type: :controller do
     end
     context "with invalid attributes" do
       before do
-        allow(OrderItem).to receive(:new).and_return order_item
-        allow(order_item).to receive(:==).and_return true
         allow(authenticated_user).to receive_message_chain(:current_order_in_progress, :add).and_return false
       end
 
@@ -72,17 +69,23 @@ RSpec.describe OrderItemsController, type: :controller do
         post :create, order_item: order_item_params.merge(user_id: 1)
       end
     end
+
+    context "without ability to create" do
+      before do
+        ability.cannot :create, OrderItem
+      end
+
+      it "redirects to root path" do
+        post :create, order_item: order_item_params
+        expect(response).to redirect_to root_path
+      end
+    end
   end
 
   describe 'DELETE #destroy' do
     before do
-      allow(authenticated_user).to receive_message_chain(:current_order_in_progress, :order_items, :find).and_return order_item
+      allow(OrderItem).to receive(:find).and_return order_item
       allow(order_item).to receive(:destroy).and_return true
-    end
-
-    it "receives find and return order item in current order" do
-      expect(authenticated_user.current_order_in_progress.order_items).to receive(:find).with(order_item.id.to_s)
-      delete :destroy, id: order_item.id
     end
 
     it "sends success notice destroy item" do
@@ -93,6 +96,17 @@ RSpec.describe OrderItemsController, type: :controller do
     it "redirects to :back" do
       delete :destroy, id: order_item.id
       expect(response).to redirect_to :back
+    end
+
+    context "without ability to destroy" do
+      before do
+        ability.cannot :destroy, OrderItem
+      end
+
+      it "redirects to root path" do
+        delete :destroy, id: order_item.id
+        expect(response).to redirect_to root_path
+      end
     end
   end
 
@@ -108,6 +122,17 @@ RSpec.describe OrderItemsController, type: :controller do
     it "redirects to :back" do
       post :destroy_all
       expect(response).to redirect_to :back
+    end
+
+    context "without ability to destroy all" do
+      before do
+        ability.cannot :destroy_all, OrderItem
+      end
+
+      it "redirects to root path" do
+        post :destroy_all
+        expect(response).to redirect_to root_path
+      end
     end
   end
 end
