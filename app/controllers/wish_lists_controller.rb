@@ -1,6 +1,7 @@
 class WishListsController < ApplicationController
 
-  load_and_authorize_resource
+  before_action :set_current_wish_list
+  authorize_resource
 
   def show
   end
@@ -16,6 +17,12 @@ class WishListsController < ApplicationController
     current_book = @wish_list.books.find params[:book_id]
     @wish_list.books.destroy current_book
     redirect_to :back, notice: t("wish_list.remove_success")
+  end
+
+  private
+
+  def set_current_wish_list
+    @wish_list = current_or_guest_user.wish_list
   end
 
 end

@@ -48,7 +48,7 @@ RSpec.describe Ability, type: :model do
       it {expect(subject).to be_able_to(:read, order)}
       it {expect(subject).not_to be_able_to(:update, other_order)}
       it {expect(subject).not_to be_able_to(:read, other_order)}
-      it "should not be able to complete if order's state is not in_queue" do
+      it "should not be able to complete if order's state is not confirm" do
         expect(subject).not_to be_able_to(:complete, order)
       end
     end
@@ -89,7 +89,7 @@ RSpec.describe Ability, type: :model do
       it {expect(subject).to be_able_to(:destroy, Order)}
       it {expect(subject).to be_able_to(:state, Order)}
       it {expect(subject).to be_able_to(:all_events, Order)}
-      it "should not be able to complete if order's state is not in_queue" do
+      it "should not be able to complete if order's state is not confirm" do
         expect(subject).not_to be_able_to(:complete, order)
       end
     end

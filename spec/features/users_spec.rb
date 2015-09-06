@@ -114,41 +114,41 @@ feature 'User management' do
         fill_in 'user[current_password]', with: customer.password
       end
       scenario 'with blank street address' do
-        fill_in_address(billing_address, "billing")
+        fill_in_address(billing_address, "billing", "user")
         fill_in 'user[billing_address_attributes][address]', with: ""
         click_button(I18n.t("settings.edit_info.update_info"))
         expect(page).to have_content("Billing address address can't be blank")
       end
       scenario 'with blank city' do
-        fill_in_address(billing_address, "billing")
+        fill_in_address(billing_address, "billing", "user")
         fill_in 'user[billing_address_attributes][city]', with: ""
         click_button(I18n.t("settings.edit_info.update_info"))
         expect(page).to have_content("Billing address city can't be blank")
       end
       scenario 'with blank country' do
-        fill_in_address(billing_address, "billing", country = true)
+        fill_in_address(billing_address, "billing", "user", country = true)
         click_button(I18n.t("settings.edit_info.update_info"))
         expect(page).to have_content("Billing address country can't be blank")
       end
       scenario 'with blank zip code' do
-        fill_in_address(billing_address, "billing")
+        fill_in_address(billing_address, "billing", "user")
         fill_in 'user[billing_address_attributes][zipcode]', with: ""
         click_button(I18n.t("settings.edit_info.update_info"))
         expect(page).to have_content("Billing address zipcode can't be blank")
       end
       scenario 'with blank phone' do
-        fill_in_address(billing_address, "billing")
+        fill_in_address(billing_address, "billing", "user")
         fill_in 'user[billing_address_attributes][phone]', with: ""
         click_button(I18n.t("settings.edit_info.update_info"))
         expect(page).to have_content("Billing address phone can't be blank")
       end
 
       scenario 'with valid information' do
-        fill_in_address(billing_address, "billing")
+        fill_in_address(billing_address, "billing", "user")
         click_button(I18n.t("settings.edit_info.update_info"))
         expect(page).to have_content(I18n.t("devise.registrations.updated"))
         click_link(I18n.t("settings.settings"))
-        check_fields_address(billing_address, "billing")
+        check_fields_address(billing_address, "billing", "user")
       end
     end
 
@@ -157,41 +157,41 @@ feature 'User management' do
         fill_in 'user[current_password]', with: customer.password
       end
       scenario 'with blank street address' do
-        fill_in_address(shipping_address, "shipping")
+        fill_in_address(shipping_address, "shipping", "user")
         fill_in 'user[shipping_address_attributes][address]', with: ""
         click_button(I18n.t("settings.edit_info.update_info"))
         expect(page).to have_content("Shipping address address can't be blank")
       end
       scenario 'with blank city' do
-        fill_in_address(shipping_address, "shipping")
+        fill_in_address(shipping_address, "shipping", "user")
         fill_in 'user[shipping_address_attributes][city]', with: ""
         click_button(I18n.t("settings.edit_info.update_info"))
         expect(page).to have_content("Shipping address city can't be blank")
       end
       scenario 'with blank country' do
-        fill_in_address(shipping_address, "shipping", country = true)
+        fill_in_address(shipping_address, "shipping", "user", country = true)
         click_button(I18n.t("settings.edit_info.update_info"))
         expect(page).to have_content("Shipping address country can't be blank")
       end
       scenario 'with blank zip code' do
-        fill_in_address(shipping_address, "shipping")
+        fill_in_address(shipping_address, "shipping", "user")
         fill_in 'user[shipping_address_attributes][zipcode]', with: ""
         click_button(I18n.t("settings.edit_info.update_info"))
         expect(page).to have_content("Shipping address zipcode can't be blank")
       end
       scenario 'with blank phone' do
-        fill_in_address(shipping_address, "shipping")
+        fill_in_address(shipping_address, "shipping", "user")
         fill_in 'user[shipping_address_attributes][phone]', with: ""
         click_button(I18n.t("settings.edit_info.update_info"))
         expect(page).to have_content("Shipping address phone can't be blank")
       end
 
       scenario 'with valid information' do
-        fill_in_address(shipping_address, "shipping")
+        fill_in_address(shipping_address, "shipping", "user")
         click_button(I18n.t("settings.edit_info.update_info"))
         expect(page).to have_content(I18n.t("devise.registrations.updated"))
         click_link(I18n.t("settings.settings"))
-        check_fields_address(shipping_address, "shipping")
+        check_fields_address(shipping_address, "shipping", "user")
       end
     end
 

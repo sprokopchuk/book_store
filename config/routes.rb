@@ -26,5 +26,5 @@ Rails.application.routes.draw do
       post :destroy_all
     end
   end
-  resource :shopping_cart, controller: "cart", only: [:show, :update]
+  resource :shopping_cart, controller: "cart", only: [:show, :update], format: false
 end

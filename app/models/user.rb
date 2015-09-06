@@ -13,8 +13,6 @@ class User < ActiveRecord::Base
   validates :first_name, :last_name, presence: true
   accepts_nested_attributes_for :billing_address, :reject_if => :all_blank
   accepts_nested_attributes_for :shipping_address, :reject_if => :all_blank
-  accepts_nested_attributes_for :credit_card
-  accepts_nested_attributes_for :orders
 
   after_create do |user|
     user.create_wish_list(user: self) unless user.guest?
