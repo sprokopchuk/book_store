@@ -1,19 +1,20 @@
 %h2.page-header Reviews
-- @book.ratings.approved.each do |rating|
-  %section.review-list
-    %article.row
-      .panel.panel-default.arrow.left
-        .panel-body
-          %header.text-left
-            .review-user
-              %i.fa.fa-user
-              = rating.user.full_name
-            %time.review-date
-              %i.fa.fa-clock-o
-              = rating.created_at.strftime("%b %d, %Y")
-            .stars
-              - rating.rate.times do
-                %i.glyphicon.glyphicon-star.text-primary
-          .review-text1
-            %p
-              = rating.review
+- @book.ratings.each do |rating|
+  - if can? :read, rating
+    %section.review-list
+      %article.row
+        .panel.panel-default
+          .panel-body
+            %header.text-left
+              .review-user
+                %i.fa.fa-user
+                = rating.user.full_name
+              %time.review-date
+                %i.fa.fa-clock-o
+                = rating.created_at.strftime("%b %d, %Y")
+              .stars
+                - rating.rate.times do
+                  %i.glyphicon.glyphicon-star.text-primary
+            .review-text1
+              %p
+                = rating.review

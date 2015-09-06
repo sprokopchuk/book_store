@@ -8,7 +8,7 @@ class Ability
       can :dashboard
       can :manage, [Book, Author, Category]
       can [:read, :update, :create, :destroy, :state, :all_events], Order
-      can :complete, Order, :user_id => user.id, state: "in_queue"
+      can :complete, Order, :user_id => user.id, state: "confirm"
       can [:create, :destroy, :destroy_all], OrderItem, :order_id => user.current_order_in_progress.id
       can :manage, User
       can :manage, Rating
@@ -19,8 +19,9 @@ class Ability
       can :update, Order, :user_id => user.id
       can :read, Rating, state: "approved"
     else
-      can :complete, Order, :user_id => user.id, state: "in_queue"
+      can :complete, Order, :user_id => user.id, state: "confirm"
       can :create, Rating
+      can [:show, :add_book, :remove_book], WishList, user_id: user.id
       can :read, Rating, state: "approved"
       can [:create, :destroy, :destroy_all], OrderItem, :order_id => user.current_order_in_progress.id
       can [:read, :update], Order, :user_id => user.id

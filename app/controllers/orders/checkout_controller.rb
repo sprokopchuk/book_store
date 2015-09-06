@@ -1,7 +1,7 @@
 class Orders::CheckoutController < ApplicationController
 
   before_action :authenticate_user!
-  before_action except: :complete do |controller|
+  before_action except: [:update, :complete] do |controller|
     set_data controller.action_name
   end
   before_action :set_default_delivery, only: :delivery
@@ -11,53 +11,37 @@ class Orders::CheckoutController < ApplicationController
   end
 
   def delivery
-    redirect_to_checkout(@checkout_form, :billing_address, :shipping_address)
   end
 
   def update
+    @checkout_form = CheckoutForm.new current_order: current_user.current_order_in_progress
     if @checkout_form.save_or_update(checkout_form_params)
-      @checkout_form.next_step!
+      @checkout_form.next_step_checkout!
       redirect_to :action => "#{@checkout_form.current_state.to_s}"
-    elsif params[:change_state] && @checkout_form.current_state == :confirm
-      order_id = @checkout_form.current_order.id
-      @checkout_form.next_step!
-      redirect_to complete_checkout_path(order_id), notice: t("current_order.in_queue")
     else
       render "#{@checkout_form.current_state.to_s}"
     end
-
   end
 
   def payment
-    redirect_to_checkout(@checkout_form, :billing_address, :shipping_address, :delivery)
   end
 
   def confirm
-    redirect_to_checkout(@checkout_form, :billing_address, :shipping_address, :delivery, :credit_card)
   end
   def complete
     @order = Order.find(params[:id])
     authorize! :complete, @order
+    @order.next_step_checkout!
+    flash.now[:notice] = t("current_order.in_queue")
   end
 
   private
 
-  def redirect_to_checkout checkout_form, *objs
-    paths = { address: [:billing_address, :shipping_address],
-              delivery: [:delivery],
-              payment: [:credit_card]}
-    current_order = checkout_form.current_order
-    paths.each do |key, value|
-      value.each do |v|
-        return redirect_to action: "#{key}" if objs.include?(v) && current_order.send(:"#{v}").nil?
-      end
-    end
-  end
-
   def set_data action_name
     @checkout_form = CheckoutForm.new current_order: current_user.current_order_in_progress
-    redirect_to root_path, notice: t("current_order.no_items") unless @checkout_form.current_order.ready_to_checkout?; return if performed?
-    @checkout_form.set_current_state :"#{action_name}"
+    redirect_to root_path, notice: t("current_order.no_items") unless @checkout_form.ready_to_checkout?; return if performed?
+    @checkout_form.set_current_state_with_persistence :"#{action_name}"
+    redirect_to action: "#{@checkout_form.previous_step}" if @checkout_form.to_previous_step?
   end
 
   def set_default_delivery

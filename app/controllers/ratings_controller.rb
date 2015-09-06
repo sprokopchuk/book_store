@@ -1,9 +1,9 @@
 class RatingsController < ApplicationController
 
-  authorize_resource
+  load_and_authorize_resource
 
   def create
-    @rating = current_or_guest_user.ratings.build(rating_params)
+    @rating.user_id = current_or_guest_user.id
     if @rating.save
       redirect_to :back, notice: t("ratings.add_success")
     else

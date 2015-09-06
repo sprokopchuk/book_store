@@ -11,6 +11,15 @@ class CheckoutForm
   attribute :delivery, Delivery, default: :default_delivery
   attribute :use_billing_as_shipping_address, Hash
 
+  delegate :ready_to_checkout?, :next_step_checkout!, :confirm?,
+          :address?, :delivery?, :payment?, to: :current_order
+  delegate :current_state, :set_current_state_with_persistence, to: "@current_order.aasm"
+
+  validates :billing_address, :shipping_address, presence: true, unless: ->{address?}
+  validates :delivery, presence: true, unless: -> {address? || delivery?}
+  validates :credit_card, presence: true, unless: ->{address? || delivery? || payment?}
+
+
   def save_or_update options = {}
     case current_state
       when :address
@@ -22,33 +31,31 @@ class CheckoutForm
     end
   end
 
-  def current_state
-    current_order.aasm.current_state
+  def to_previous_step?
+    !valid?
   end
-
-  def set_current_state state
-    current_order.aasm.set_current_state_with_persistence state
-  end
-
-  def next_step!
-    current_order.next_step_checkout!
+  def previous_step
+    paths = { address: [:billing_address, :shipping_address],
+              delivery: [:delivery],
+              payment: [:credit_card]}
+    paths.each do |action, obj|
+      obj.each do |v|
+        return "#{action}" if !valid? && current_order.send(:"#{v}").nil?
+      end
+    end
   end
 
 private
 
   def default_billing_address
-    current_order.billing_address.nil? ? current_order.user.build_billing_address : current_order.billing_address
+    current_order.billing_address
   end
   def default_shipping_address
-    current_order.shipping_address.nil? ? current_order.user.build_shipping_address : current_order.shipping_address
+    current_order.shipping_address
   end
 
   def default_credit_card
-    current_order.user.credit_card.nil? ? current_order.user.build_credit_card : current_order.user.credit_card
-  end
-
-  def default_delivery
-    current_order.delivery unless current_order.delivery.nil?
+    current_order.credit_card
   end
 
   def create_or_update_addresses(billing_address_attrs = {},
@@ -74,7 +81,7 @@ private
     current_user = current_order.user
     result = ""
     objs.each do |k, v|
-      if current_order.instance_eval("#{k}.nil?")
+      if current_user.instance_eval("#{k}.nil?")
         obj = current_user.send(:"build_#{k}", v)
         promote_errors(obj.errors, k) and return false unless obj.valid?
         instance_variable_set("@#{k}", obj)
@@ -94,4 +101,5 @@ private
       errors["#{obj}.#{attribute}"] = message
     end
   end
+
 end

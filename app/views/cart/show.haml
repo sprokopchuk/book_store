@@ -11,7 +11,7 @@
             = link_to t("current_order.continue_shopping"), root_path, class: "btn btn-primary btn-block"
     - if @current_order.order_items.any?
       .panel-body
-        = form_for(@current_order, url: orders_path, method: :put) do |f|
+        = form_for(@current_order, url: shopping_cart_path, method: :put) do |f|
           %table.table.table-hover
             %thead
               %tr

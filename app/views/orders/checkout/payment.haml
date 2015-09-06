@@ -32,7 +32,7 @@
             %u
               %h3 Payment:
             %br
-            = f.fields_for :credit_card, @checkout_form.credit_card do |card|
+            = f.fields_for :credit_card, @checkout_form.credit_card || current_user.credit_card do |card|
               .col-xs-12
                 %h4
                   %label.control-label Card Holder's Name

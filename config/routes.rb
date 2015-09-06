@@ -12,22 +12,19 @@ Rails.application.routes.draw do
   end
   resources :ratings, only: :create
   resources :books, only: [:index, :show], format: false
-  resources :orders, except: [:destroy, :edit, :update] do
-    collection do
-      put :update, to: "orders#update"
-    end
-  end
+  resources :orders, except: [:destroy, :edit, :update]
   resource :checkout, controller: "orders/checkout", only: [:update], format: false do
     get 'address'
     get 'delivery'
     get 'payment'
     get 'confirm'
     get 'complete/:id', to: 'orders/checkout#complete', as: :complete
+    post "complete/:id", to: 'orders/checkout#complete'
   end
   resources :order_items, only: [:create, :destroy] do
     collection do
       post :destroy_all
     end
   end
-  get '/shopping_cart/', :format => false, to: "orders#edit", as: 'shopping_cart'
+  resource :shopping_cart, controller: "cart", only: [:show, :update]
 end
