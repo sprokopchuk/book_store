@@ -24,7 +24,7 @@ class Ability
       can [:show, :add_book, :remove_book], WishList, user_id: user.id
       can :read, Rating, state: "approved"
       can [:create, :destroy, :destroy_all], OrderItem, :order_id => user.current_order_in_progress.id
-      can [:read, :update], Order, :user_id => user.id
+      can [:read], Order, :user_id => user.id
     end
   end
 end

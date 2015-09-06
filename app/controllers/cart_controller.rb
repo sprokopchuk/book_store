@@ -9,7 +9,7 @@ class CartController < ApplicationController
     if @current_order.update(order_params)
       redirect_to :back, notice: t("current_order.update_success")
     else
-      redirect_to :back, notice: t("current_order.add_fail")
+      redirect_to :back, notice: t("current_order.fail")
     end
   end
 
