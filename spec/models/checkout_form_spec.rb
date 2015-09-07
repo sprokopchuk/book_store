@@ -49,6 +49,10 @@ RSpec.describe CheckoutForm, type: :model do
 
     context "update" do
 
+      before do
+        FactoryGirl.create :billing_address, country_id: country.id, user_id: authenticated_user.id
+        FactoryGirl.create :shipping_address, country_id: country.id, user_id: authenticated_user.id
+      end
       it "return true with valid billing_address attributes and shipping_address attributes" do
         expect(checkout_form.save_or_update billing_address: billing_address_attributes, shipping_address: shipping_address_attributes).to be_truthy
       end

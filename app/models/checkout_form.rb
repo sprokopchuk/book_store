@@ -83,15 +83,13 @@ private
     objs.each do |k, v|
       if current_user.instance_eval("#{k}.nil?")
         obj = current_user.send(:"build_#{k}", v)
-        promote_errors(obj.errors, k) and return false unless obj.valid?
-        instance_variable_set("@#{k}", obj)
-        result &&= instance_eval("@#{k}.save")
       else
         obj = current_order.send(:"#{k}")
-        obj.attributes = v
-        promote_errors(obj.errors, k) and return false unless obj.valid?
-        result &&= current_user.instance_eval("#{k}.update(#{v})")
+        obj.assign_attributes(v)
       end
+      promote_errors(obj.errors, k) and return false unless obj.valid?
+      instance_variable_set("@#{k}", obj)
+      result &&= instance_eval("@#{k}.save")
     end
     result
   end
