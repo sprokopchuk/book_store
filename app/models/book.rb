@@ -16,6 +16,10 @@ class Book < ActiveRecord::Base
   end
 
   def self.best_sellers
-    OrderItem.group(:book).sum(:quantity).sort_by{ |k, v| v }.reverse.to_h.keys[0,3]
+    OrderItem.select('book_id','sum(quantity) AS sum_quantity').
+              order('sum_quantity DESC').group(:book_id).limit(3).
+              includes(:book).group_by(&:book).keys
   end
 end
+
+
